@@ -1,0 +1,309 @@
+%% ============================================================
+%% MoE Models & Routing (9 papers)
+%% ============================================================
+
+@inproceedings{shazeer2017outrageously,
+  title={Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer},
+  author={Shazeer, Noam and Mirhoseini, Azalia and Maziarz, Krzysztof and Davis, Andy and Le, Quoc V. and Hinton, Geoffrey E. and Dean, Jeff},
+  booktitle={Proceedings of the International Conference on Learning Representations (ICLR)},
+  year={2017},
+  url={https://arxiv.org/abs/1701.06538}
+}
+
+@article{fedus2022switch,
+  title={Switch Transformers: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity},
+  author={Fedus, William and Zoph, Barret and Shazeer, Noam},
+  journal={Journal of Machine Learning Research},
+  volume={23},
+  number={120},
+  pages={1--39},
+  year={2022}
+}
+
+@inproceedings{lepikhin2021gshard,
+  title={{GShard}: Scaling Giant Models with Conditional Computation and Automatic Sharding},
+  author={Lepikhin, Dmitry and Lee, HyoukJoong and Xu, Yuanzhong and Chen, Dehao and Firat, Orhan and Huang, Yanping and Krikun, Maxim and Shazeer, Noam and Chen, Zhifeng},
+  booktitle={International Conference on Learning Representations (ICLR)},
+  year={2021},
+  url={https://openreview.net/forum?id=qrwe7XHTmYb}
+}
+
+@article{jiang2024mixtral,
+  title={Mixtral of Experts},
+  author={Jiang, Albert Q. and Sablayrolles, Alexandre and Roux, Antoine and Mensch, Arthur and Savary, Blanche and Bamford, Chris and Chaplot, Devendra Singh and de las Casas, Diego and Hanna, Emma Bressand and others},
+  journal={arXiv preprint arXiv:2401.04088},
+  year={2024}
+}
+
+@article{deepseekai2024deepseekv2,
+  title={{DeepSeek-V2}: A Strong, Economical, and Efficient Mixture-of-Experts Language Model},
+  author={{DeepSeek-AI} and Liu, Aixin and Feng, Bei and Wang, Bingxuan and Wang, Bochao and Liu, Bo and others},
+  journal={arXiv preprint arXiv:2405.04434},
+  year={2024}
+}
+
+@article{deepseekai2024deepseekv3,
+  title={{DeepSeek-V3} Technical Report},
+  author={{DeepSeek-AI} and Liu, Aixin and Feng, Bei and Xue, Bing and Wang, Bingxuan and Wu, Bochao and Lu, Chengda and Zheng, Da and others},
+  journal={arXiv preprint arXiv:2412.19437},
+  year={2024}
+}
+
+@article{bai2023qwen,
+  title={Qwen Technical Report},
+  author={Bai, Jinze and Bai, Shuai and Chu, Yunfei and Cui, Zeyu and Dang, Kai and Deng, Xiaodong and Fan, Yang and Ge, Wenbin and Han, Yu and Huang, Fei and others},
+  journal={arXiv preprint arXiv:2309.16609},
+  year={2023}
+}
+
+@article{zoph2022stmoe,
+  title={{ST-MoE}: Designing Stable and Transferable Sparse Expert Models},
+  author={Zoph, Barret and Bello, Irwan and Kumar, Sameer and Du, Nan and Huang, Yanping and Dean, Jeffrey and Shazeer, Noam and Fedus, William},
+  journal={arXiv preprint arXiv:2202.08906},
+  year={2022}
+}
+
+@inproceedings{zhou2022expertchoice,
+  title={Mixture-of-Experts with Expert Choice Routing},
+  author={Zhou, Yanqi and Lei, Tao and Liu, Hanxiao and Du, Nan and Huang, Yanping and Zhao, Vincent and Dai, Andrew M. and Chen, Zhifeng and Le, Quoc V. and Laudon, James},
+  booktitle={Advances in Neural Information Processing Systems},
+  volume={35},
+  pages={23652--23664},
+  year={2022}
+}
+
+%% ============================================================
+%% LLM Quantization (10 papers)
+%% ============================================================
+
+@inproceedings{frantar2023gptq,
+  title={{GPTQ}: Accurate Post-Training Quantization for Generative Pre-trained Transformers},
+  author={Frantar, Elias and Ashkboos, Saleh and Hoefler, Torsten and Alistarh, Dan},
+  booktitle={International Conference on Learning Representations (ICLR)},
+  year={2023},
+  url={https://openreview.net/forum?id=tcbBPnfwxS}
+}
+
+@inproceedings{lin2024awq,
+  title={{AWQ}: Activation-Aware Weight Quantization for On-Device Large Language Model Compression and Acceleration},
+  author={Lin, Ji and Tang, Jiaming and Tang, Haotian and Yang, Shang and Chen, Wei-Ming and Wang, Wei-Chen and Xiao, Guangxuan and Dang, Xingyu and Gan, Chuang and Han, Song},
+  booktitle={Proceedings of Machine Learning and Systems (MLSys)},
+  year={2024},
+  url={https://arxiv.org/abs/2306.00978}
+}
+
+@inproceedings{xiao2023smoothquant,
+  title={{SmoothQuant}: Accurate and Efficient Post-Training Quantization for Large Language Models},
+  author={Xiao, Guangxuan and Lin, Ji and Seznec, Mickael and Wu, Hao and Demouth, Julien and Han, Song},
+  booktitle={Proceedings of the 40th International Conference on Machine Learning},
+  series={Proceedings of Machine Learning Research},
+  volume={202},
+  pages={38087--38099},
+  year={2023},
+  publisher={PMLR}
+}
+
+@inproceedings{dettmers2022llmint8,
+  title={{LLM.int8()}: 8-bit Matrix Multiplication for Transformers at Scale},
+  author={Dettmers, Tim and Lewis, Mike and Belkada, Younes and Zettlemoyer, Luke},
+  booktitle={Advances in Neural Information Processing Systems},
+  volume={35},
+  pages={30318--30332},
+  year={2022},
+  url={https://arxiv.org/abs/2208.07339}
+}
+
+@inproceedings{dettmers2023qlora,
+  title={{QLoRA}: Efficient Finetuning of Quantized LLMs},
+  author={Dettmers, Tim and Pagnoni, Artidoro and Holtzman, Ari and Zettlemoyer, Luke},
+  booktitle={Advances in Neural Information Processing Systems},
+  volume={36},
+  year={2023},
+  url={https://arxiv.org/abs/2305.14314}
+}
+
+@inproceedings{dettmers2024spqr,
+  title={{SpQR}: A Sparse-Quantized Representation for Near-Lossless LLM Weight Compression},
+  author={Dettmers, Tim and Svirschevski, Ruslan and Egiazarian, Vage and Kuznedelev, Danil and Frantar, Elias and Ashkboos, Saleh and Boroumand, Michael and Hoefler, Torsten and Alistarh, Dan},
+  booktitle={International Conference on Learning Representations (ICLR)},
+  year={2024},
+  url={https://arxiv.org/abs/2306.03078}
+}
+
+@inproceedings{chee2024quip,
+  title={{QuIP}: 2-Bit Quantization of Large Language Models With Guarantees},
+  author={Chee, Jerry and Bayer, Artun and Foster, Madeleine and Freeman, C. Daniel and Tai, Kai Sheng and Tigner, Matthew and Chen, Vincent and Thilagar, Anish and Shwartz-Ziv, Ravid and Goldblum, Micah and De Sa, Christopher},
+  booktitle={Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+  year={2024},
+  url={https://arxiv.org/abs/2307.13304}
+}
+
+@inproceedings{tseng2024quipsharp,
+  title={{QuIP\#}: Even Better LLM Quantization with Hadamard Incoherence and Lattice Codebooks},
+  author={Tseng, Albert and Chee, Jerry and Sun, Qijun and Kuleshov, Volodymyr and De Sa, Christopher},
+  booktitle={Proceedings of the 41st International Conference on Machine Learning},
+  series={Proceedings of Machine Learning Research},
+  volume={235},
+  year={2024},
+  publisher={PMLR},
+  url={https://proceedings.mlr.press/v235/tseng24a.html}
+}
+
+@inproceedings{egiazarian2024aqlm,
+  title={Extreme Compression of Large Language Models via Additive Quantization},
+  author={Egiazarian, Vage and Panferov, Andrei and Kuznedelev, Denis and Malinovskii, Vsevolod and Perminov, Sergey and Babenko, Arsen and Alistarh, Dan},
+  booktitle={Proceedings of the 41st International Conference on Machine Learning (ICML)},
+  series={Proceedings of Machine Learning Research},
+  volume={235},
+  year={2024},
+  publisher={PMLR}
+}
+
+@inproceedings{shao2024omniquant,
+  title={{OmniQuant}: Omnidirectionally Calibrated Quantization for Large Language Models},
+  author={Shao, Wenqi and Chen, Mengzhao and Zhang, Zhaoyang and Xu, Peng and Yang, Lirui and Zhang, Kaipeng and Luo, Ping},
+  booktitle={The Twelfth International Conference on Learning Representations (ICLR)},
+  year={2024}
+}
+
+%% ============================================================
+%% Mixed-Precision Allocation (5 papers)
+%% ============================================================
+
+@inproceedings{duanmu2025mxmoe,
+  title={{MxMoE}: Mixed-Precision Quantization for {MoE} with Accuracy and Performance Co-Design},
+  author={Duanmu, Haojie and Li, Xiuhong and Yuan, Zhihang and Zheng, Size and Duan, Jiangfei and Zhang, Xingcheng and Lin, Dahua},
+  booktitle={Proceedings of the 42nd International Conference on Machine Learning (ICML)},
+  year={2025},
+  url={https://arxiv.org/abs/2505.05799}
+}
+
+@inproceedings{dong2019hawq,
+  title={{HAWQ}: Hessian Aware Quantization of Neural Networks with Mixed-Precision},
+  author={Dong, Zhen and Yao, Zhewei and Gholami, Amir and Mahoney, Michael W. and Keutzer, Kurt},
+  booktitle={Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+  pages={293--302},
+  year={2019}
+}
+
+@article{dong2019hawqv2,
+  title={{HAWQ-V2}: Hessian Aware Quantization with Mixed Precision},
+  author={Dong, Zhen and Yao, Zhewei and Arfeen, Daiyaan and Gholami, Amir and Mahoney, Michael W. and Keutzer, Kurt},
+  journal={arXiv preprint arXiv:1911.03852},
+  year={2019}
+}
+
+@inproceedings{yao2021hawqv3,
+  title={{HAWQ-V3}: Dyadic Neural Network Quantization},
+  author={Yao, Zhewei and Dong, Zhen and Zheng, Zhangcheng and Gholami, Amir and Yu, Jiali and Tan, Eric and Wang, Leyuan and Huang, Qijing and Wang, Yida and Mahoney, Michael and Keutzer, Kurt},
+  booktitle={Proceedings of the 38th International Conference on Machine Learning},
+  series={Proceedings of Machine Learning Research},
+  volume={139},
+  pages={11887--11898},
+  year={2021},
+  publisher={PMLR}
+}
+
+@article{li2024quantmoebench,
+  title={{QuantMoE-Bench}: Examining Post-Training Quantization for Mixture-of-Experts},
+  author={Li, Pingzhi and Jin, Xiaolong and Tan, Zhen and Cheng, Yu and Chen, Tianlong},
+  journal={arXiv preprint arXiv:2406.08155},
+  year={2024}
+}
+
+%% ============================================================
+%% MoE Compression (5 papers)
+%% ============================================================
+
+@article{frantar2023qmoe,
+  title={{QMoE}: Practical Sub-1-Bit Compression of Trillion-Parameter Models},
+  author={Frantar, Elias and Alistarh, Dan},
+  journal={arXiv preprint arXiv:2310.16795},
+  year={2023}
+}
+
+@inproceedings{chen2025eacmoe,
+  title={{EAC-MoE}: Expert-Selection Aware Compressor for Mixture-of-Experts Large Language Models},
+  author={Chen, Yushi and Shao, Jinyu and Jiang, Haocheng and Wang, Tianci and Li, Sheng and Shao, Wenqi},
+  booktitle={Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (ACL)},
+  year={2025},
+  url={https://aclanthology.org/2025.acl-long.633/}
+}
+
+@inproceedings{yang2024moei2,
+  title={{MoE-I$^2$}: Compressing Mixture of Experts Models through Inter-Expert Pruning and Intra-Expert Low-Rank Decomposition},
+  author={Yang, Cheng and Sui, Yang and Xiao, Jinqi and Lian, Guiyang and Yan, Shuocheng and Wang, Zhi and Wen, Ji-Rong},
+  booktitle={Findings of the Association for Computational Linguistics: EMNLP 2024},
+  year={2024},
+  address={Miami, Florida, USA},
+  publisher={Association for Computational Linguistics},
+  url={https://aclanthology.org/2024.findings-emnlp.612/}
+}
+
+@inproceedings{dai2024deepseekmoe,
+  title={{DeepSeekMoE}: Towards Ultimate Expert Specialization in Mixture-of-Experts Language Models},
+  author={Dai, Damai and Deng, Chengqi and Xu, Chuan Ruan and Gao, Yuting and Li, Deli and Wang, Xingjian and Wu, Yu and Zhang, Zhixin and Wu, Yuxing and Xie, Kaibi and others},
+  booktitle={Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},
+  pages={1256--1275},
+  year={2024},
+  organization={Association for Computational Linguistics}
+}
+
+@inproceedings{komatsuzaki2023sparseupcycling,
+  title={Sparse Upcycling: Training Mixture-of-Experts from Dense Checkpoints},
+  author={Komatsuzaki, Aran and Puigcerver, Joan and Lee, James and Mustafa, Basil and Beyer, Lucas and Pinto, Alexander and Houlsby, Neil and Dehghani, Mostafa},
+  booktitle={International Conference on Learning Representations (ICLR)},
+  year={2023},
+  url={https://arxiv.org/abs/2212.05055}
+}
+
+%% ============================================================
+%% Rounding / General Quantization Baseline (1 paper)
+%% ============================================================
+
+@inproceedings{nagel2020adaround,
+  title={Up or Down? Adaptive Rounding for Post-Training Quantization},
+  author={Nagel, Markus and Amjad, Rana Ali and van Baalen, Mart and Louizos, Christos and Blankevoort, Tijmen},
+  booktitle={Proceedings of the 37th International Conference on Machine Learning},
+  series={Proceedings of Machine Learning Research},
+  volume={119},
+  pages={7197--7206},
+  year={2020},
+  publisher={PMLR}
+}
+
+%% ============================================================
+%% General ML Efficiency (3 papers)
+%% ============================================================
+
+@inproceedings{han2016deepcompression,
+  title={Deep Compression: Compressing Deep Neural Networks with Pruning, Trained Quantization and Huffman Coding},
+  author={Han, Song and Mao, Huizi and Dally, William J.},
+  booktitle={International Conference on Learning Representations (ICLR)},
+  year={2016},
+  url={https://arxiv.org/abs/1510.00149}
+}
+
+@inproceedings{hubara2021accelerated,
+  title={Accelerated Sparse Neural Training: A Provable and Efficient Method to Find {N:M} Transposable Masks},
+  author={Hubara, Itay and Chmiel, Brian and Island, Moshe and Natsev, Prem and Yuzhakov, Alexander and Baskin, Chaim},
+  booktitle={Advances in Neural Information Processing Systems},
+  volume={34},
+  year={2021}
+}
+
+@article{cai2020zeroq,
+  title={{ZeroQ}: A Novel Zero Shot Quantization Framework},
+  author={Cai, Yaohui and Yao, Zhewei and Dong, Zhen and Gholami, Amir and Mahoney, Michael W. and Keutzer, Kurt},
+  journal={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year={2020}
+}
+
+%% ============================================================
+%% Backward-compat aliases (old key -> new key mapping):
+%%   deepseekv3 -> deepseekai2024deepseekv3
+%%   wang2025mxmoe -> duanmu2025mxmoe
+%%   ding2024qmoe -> frantar2023qmoe
+%%   eacmoe2024 -> chen2025eacmoe
+%%   lin2023awq -> lin2024awq
+%% ============================================================

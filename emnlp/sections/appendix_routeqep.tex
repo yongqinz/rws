@@ -1,0 +1,20 @@
+\section{RouteQEP Negative-Result Details}
+\label{app:routeqep}
+
+RouteQEP extends \method\ by propagating quantization errors across layers through the co-routing graph. Let $\delta_{l,e}$ be the local quantization error for expert $e$ at layer $l$. RouteQEP defines a propagated error:
+\begin{equation}
+\tilde{\delta}_{l,e} = \delta_{l,e} + \lambda \sum_{e'} \Pr\!\bigl(e' \mid e,\, l{+}1\bigr)\, \tilde{\delta}_{l+1,e'},
+\end{equation}
+where $\Pr(e' \mid e, l)$ is the empirical co-routing probability---the fraction of tokens routed to $e$ at layer $l$ that are also routed to $e'$ at layer $l{+}1$.
+
+The issue is that the co-routing probability $\Pr(e' \mid e)$ can be high for popular expert pairs, causing the recursion to amplify local errors rather than averaging them out. Specifically, the expected amplification per hop is roughly $\lambda \cdot \bar{c}$, where $\bar{c}$ is the mean co-routing probability over all expert pairs. With $\lambda\!=\!1$ and $\bar{c}$ typically in the range 0.1--0.3, the 1-hop propagated error is 1.1--1.3$\times$ the local error, and higher hops accumulate. The allocator responds to this amplified objective by concentrating all high-bit slots on the most-connected experts, regardless of their actual quantization sensitivity.
+
+Results at 2.75\,bits on Qwen1.5-MoE:
+\begin{itemize}
+\item \textbf{No propagation} (\method, local): PPL 8.43 (baseline 8.52).
+\item \textbf{1-hop} ($\lambda\!=\!1.0$): PPL 11.54 ($+$36\% vs.\ baseline).
+\item \textbf{2-hop} ($\lambda\!=\!1.0$): PPL 12.87 ($+$51\% vs.\ baseline).
+\item \textbf{1-hop normalized} (divide by depth): PPL 10.51 ($+$23\%).
+\end{itemize}
+
+All variants regress PPL. The allocator is responding rationally to an objective that over-weights highly connected experts. We conclude that intra-layer routing information is valuable but naive recursive cross-layer propagation is not with this formulation.

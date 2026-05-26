@@ -1,0 +1,291 @@
+\documentclass{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{microtype}
+\usepackage{subcaption}
+\usepackage{xspace}
+
+\newcommand{\method}{\textsc{RWS}\xspace}
+\newcommand{\longmethod}{Route-Weighted Sensitivity\xspace}
+\newcommand{\rhi}{\mathrm{RHI}}
+
+\title{Spending Bits Where Tokens Go:\\ Route-Weighted Sensitivity and a Heterogeneity Diagnostic for Aggressive Mixed-Precision MoE Quantization}
+
+\author{Anonymous}
+
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Post-training mixed-precision quantization of Mixture-of-Experts (MoE) language models is typically posed as a bit-allocation problem over per-block sensitivity scores. We point out a structural mismatch in how this problem is \emph{scored}: MoE layers route tokens to a sparse subset of experts, yet existing sensitivity-based objectives weight every expert's reconstruction loss equally, independent of how often that expert is actually invoked. We propose \longmethod\ (\method), an objective-level modification that multiplies each expert's calibration loss by its empirical routing probability before any allocator (ILP or otherwise) consumes it. \method\ is hyperparameter-free, uses only the routing trace already collected during calibration, and is drop-in for any sensitivity-based pipeline. We further introduce the \emph{Route Heterogeneity Index} ($\rhi$), a single scalar computed in milliseconds from a calibration forward pass, that serves as a diagnostic for when \method\ is likely to yield gains. On Qwen1.5-MoE-A2.7B ($\rhi = 1.84$), \method\ cuts WikiText-2 perplexity by $2.8\%$ at $2.5$ bits/parameter and lifts a 7-task downstream average by $+0.63$ pp; on DeepSeek-MoE-16B ($\rhi = 1.56$) gains are moderate ($-1.3\%$), consistent with the $\rhi$ prediction that higher heterogeneity yields larger improvements. We also report a negative result---multi-hop cross-layer error propagation explodes the objective and degrades PPL by $37$--$51\%$---as a cautionary data point for route-aware allocation design. The bit budget should follow the tokens.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+The cost of serving modern Mixture-of-Experts (MoE) language models is dominated by the experts, not by attention or embeddings. Mixtral-8x7B, Qwen1.5-MoE, DeepSeek-V3, and similar models place $80$--$95\%$ of their parameters in expert feed-forward blocks~\citep{jiang2024mixtral, bai2023qwen, deepseekv3}. Post-training quantization therefore concentrates its efforts there, and the central knob---\emph{how many bits to give each expert}---is a bit-allocation problem solved by sensitivity-based allocators~\citep{wang2025mxmoe, zhang2024optimizing, xi2024mixed, ding2024qmoe}.
+
+\paragraph{A structural mismatch in the objective.} A sensitivity-based allocator minimizes a weighted sum of per-block reconstruction losses subject to a bit budget. Existing formulations, ILP-based or greedy, treat each expert's loss as a scalar contribution to the total, without reference to how often the expert is actually invoked at inference. This ignores the entire point of MoE: routing. Two experts in the same layer may have identical calibration losses under a given strategy, but if one expert is selected by $30\%$ of tokens and the other by $0.5\%$, the \emph{expected} quality impact of quantizing them is not equal.
+
+\paragraph{Our proposal.} We close this mismatch with three contributions.
+
+\begin{enumerate}
+\item \textbf{\longmethod\ (\method)} (\S\ref{sec:method}): an objective-level modification that multiplies each expert's calibration loss by its empirical routing probability before the allocator consumes it. The modification introduces no hyperparameters, uses only routing statistics the calibration pass already needs, and applies unchanged to any sensitivity-based allocator.
+\item \textbf{Route Heterogeneity Index ($\rhi$)} (\S\ref{sec:rhi}): a single model-level scalar, derived from the routing trace, that predicts the \emph{magnitude} of \method\ gains. Higher-$\rhi$ models (Qwen1.5-MoE, $\rhi = 1.84$) show larger improvements ($-2.8\%$); moderate-$\rhi$ models (DeepSeek-MoE, $\rhi = 1.56$) show smaller but meaningful gains ($-1.3\%$). We present $\rhi$ as a diagnostic hypothesis supported by our two-model evidence.
+\item \textbf{Aggressive-compression sweet spot} (\S\ref{sec:results}): the benefit of routing-aware scoring is non-monotone. At high budgets ($\ge 3$ bits/param), the allocator already has enough capacity that routing information is irrelevant; at moderate budgets ($2.5$--$2.75$ bits/param), routing information yields $1$--$3\%$ PPL improvement and measurable downstream gains; at the theoretical floor ($2.3$ bits/param) the quantization itself dominates and the gap narrows again.
+\end{enumerate}
+
+We also contribute a cautionary negative result: we implemented a cross-layer extension that back-propagates expert errors through the routing graph, and show analytically and empirically that the recursion gain explodes the allocator's objective, regressing PPL by $37$--$51\%$ (\S\ref{sec:routeqep-fail}). Simplicity is not just convenient here---it is necessary.
+
+\paragraph{Headline.} Qwen1.5-MoE-A2.7B @ 2.5 bits/param: baseline PPL $9.62$, \method\ PPL $9.35$ ($-2.8\%$); 7-task accuracy $59.52\% \to 60.15\%$ ($+0.63$\,pp; \method\ wins on 5/7). Cost: zero, same allocator, same calibration.
+
+\section{Preliminaries}
+\label{sec:background}
+
+\paragraph{MoE forward pass.} An MoE layer contains $N$ expert sub-networks $\{E_e\}_{e=1}^N$ and a learnable router $R$. For an input token $x$, $R$ produces logits $\ell = R(x) \in \mathbb{R}^N$; a top-$k$ selector returns the top-$k$ indices $\mathcal{T}(x) \subset [N]$ and normalized weights $w_e(x) = \mathrm{softmax}(\ell)_e$ for $e \in \mathcal{T}(x)$. The layer output is $y = \sum_{e \in \mathcal{T}(x)} w_e(x)\, E_e(x)$.
+
+\paragraph{Sensitivity-based mixed-precision allocation.} A standard PTQ pipeline for MoE proceeds in three stages: (i) a small calibration set $\mathcal{D}_{\text{cal}}$ is used to measure per-block reconstruction loss $L_{b,s}$ for every candidate strategy $s \in \mathcal{S}$ (bit-widths, group sizes, symmetry) and every linear block $b$ (e.g., a specific expert's gate, up, or down projection); (ii) an allocator solves
+\begin{align}
+\label{eq:ilp}
+\min_{x_{b,s} \in \{0,1\}} \ \ & \sum_{b,s} L_{b,s}\, x_{b,s} \\
+\text{s.t.}\quad & \sum_{s} x_{b,s} = 1 \ \ \forall b, \qquad \sum_{b,s} \mathrm{bits}_s \cdot |b| \cdot x_{b,s} \le B, \nonumber
+\end{align}
+for a total bit budget $B$; (iii) the chosen per-block strategies are applied, typically with GPTQ or RTN weight-only calibration. ILP-based allocators add a hardware-latency term and richer constraints (\S\ref{sec:related}); the objective structure of Eq.~\ref{eq:ilp}, with its \emph{uniform} per-block sensitivities, is the common denominator.
+
+\paragraph{What the objective forgets.} Eq.~\ref{eq:ilp} treats a rarely-activated expert and a frequently-activated expert symmetrically if their reconstruction losses match. Because MoE routing distributions are typically skewed (\S\ref{sec:rhi}), this introduces a systematic misallocation under tight budgets: the allocator spends bits on experts whose per-block errors happen to be large but whose downstream influence is small.
+
+\section{Method}
+\label{sec:method}
+
+\subsection{Route-Weighted Sensitivity}
+
+Let $\pi_{l,e} \in [0,1]$ denote the empirical routing probability of expert $e$ in layer $l$---the fraction of calibration tokens for which $e$ appears in the layer-$l$ top-$k$ set. For a block $b$ belonging to expert $e$ in layer $l$, we replace the objective in Eq.~\ref{eq:ilp} by
+\begin{equation}
+\label{eq:rws}
+\min_{x_{b,s}} \ \sum_{b,s} \underbrace{\pi_{l(b),e(b)}}_{\text{routing mass}} \cdot L_{b,s}\, x_{b,s} \quad \text{s.t. Eq.~\ref{eq:ilp} constraints.}
+\end{equation}
+
+The substitution is a single change to the objective; constraints, strategy pool, solver backend, and calibration data are untouched. The routing probabilities $\pi_{l,e}$ are computed once, during the same calibration pass that produces $L_{b,s}$. In our implementation this is a three-line patch to the ILP setup.
+
+\paragraph{Why $\pi$-weighting is well-defined.} The calibration loss $L_{b,s}$ in our pipeline (and in prior work) is an \emph{unconditional} per-expert quantity: for each expert $e$, we run $e$'s computation on all calibration inputs, compute the L2 reconstruction error $\| \hat{y} - y \|_2$ between quantized and full-precision outputs, and record the scalar. This error does \emph{not} incorporate how many tokens actually route to $e$ at inference. Multiplying by $\pi_{l,e}$ therefore converts this unconditional loss into an approximation of the \emph{expected routed-token loss}---the quality impact that users of the model actually experience. There is no double-counting: $\pi$ down-weights experts that are rarely invoked and up-weights those that see most of the traffic.
+
+\paragraph{Approximation caveat.} The true expected routed-token loss for expert $e$ is $\mathbb{E}_x[\mathbf{1}(e \in \mathcal{T}(x)) \cdot L_{e,s}(x)]$, which factors into $\Pr(e \in \mathcal{T}) \cdot \mathbb{E}_x[L_{e,s}(x)]$ only when the quantization error is independent of whether expert $e$ is selected. If experts specialize (which they do), this independence does not hold exactly. Our RWS therefore uses $\pi_{l,e}$ as a \emph{first-order approximation} of the true routed expected loss. Computing the conditional loss $\mathbb{E}_{x: e \in \mathcal{T}(x)}[L_{e,s}(x)]$ would require routing each calibration token to every expert and evaluating only on routed subsets; we leave this as a natural extension for future work.
+
+\paragraph{Selection frequency vs.\ gate weight.} We use $\pi_{l,e} = \Pr(e \in \mathcal{T}(x))$ (top-$k$ selection frequency) rather than the expected gate weight $\alpha_{l,e} = \mathbb{E}_x[\mathbf{1}(e \in \mathcal{T}(x)) \cdot w_e(x)]$. The two are correlated but not identical. We choose $\pi$ because (i) it is simpler to compute, (ii) it avoids conflating routing probability with weight magnitude, and (iii) in our experiments the two variants produce nearly identical allocations (correlation $> 0.99$ on both models). We report results using $\pi$ and note that gated-mass weighting is a straightforward variant.
+
+\paragraph{Rationale.} Fix a tight budget $B$ such that only a subset of blocks can receive a high-bit strategy. In the standard objective, the allocator's decision is driven by raw loss differentials between candidate strategies. Under Eq.~\ref{eq:rws}, the decision is driven by the \emph{expected} loss differential, where expectation is taken over the routing distribution. Intuitively, spend the high-bit budget on experts whose errors will be seen by many tokens.
+
+\paragraph{Expected behavior.} At slack budgets, most blocks receive the high-bit strategy and the reweighting has little leverage; at tight budgets, the reweighting reorders precisely the blocks whose assignments are contested. \method\ should therefore help most in the aggressive regime and be neutral at high budgets. We confirm this in \S\ref{sec:results}.
+
+\subsection{Route Heterogeneity Index ($\rhi$)}
+\label{sec:rhi}
+
+\method\ has leverage only when $\pi$ carries signal---i.e., when the routing distribution is non-uniform. We quantify non-uniformity with the \emph{Route Heterogeneity Index}:
+\begin{equation}
+\label{eq:rhi}
+\rhi_l \;=\; \big(\log N - H(\pi_l)\big) + 1, \qquad \rhi \;=\; \frac{1}{L}\sum_{l=1}^{L} \rhi_l,
+\end{equation}
+where $H$ is Shannon entropy, $N$ is the number of routed experts, $L$ is the number of MoE layers, and $\pi_l$ is the normalized per-expert access frequency at layer $l$. The additive $+1$ is a cosmetic shift so that uniform routing gives $\rhi = 1$; a perfectly skewed distribution onto a single expert gives $\rhi = 1 + \log N$.
+
+$\rhi$ requires only the routing trace from a short calibration forward pass (seconds to compute on typical hardware). We \emph{hypothesize} that, for a fixed aggressive budget, the PPL gain of \method\ over a uniform-sensitivity baseline is monotone in $\rhi$ above a threshold near uniformity. Our two-model comparison (Qwen-MoE vs.\ DeepSeek-MoE) is a \emph{first consistent data point} (\S\ref{sec:rhi-validation}); we do not claim validation with this sample size and encourage future work to test the hypothesis on additional MoE architectures.
+
+\section{Experimental Setup}
+\label{sec:setup}
+
+\paragraph{Models.}
+\begin{itemize}
+\item \textbf{Qwen1.5-MoE-A2.7B}: 24 MoE layers, 60 routed experts and 1 shared expert per layer, top-4 routing, $\rhi = 1.84$.
+\item \textbf{DeepSeek-MoE-16B}: 28 MoE layers, 64 routed experts and 2 shared experts per layer, top-6 routing, $\rhi = 1.56$.
+\end{itemize}
+
+\paragraph{Strategy pool.} Weights-only quantization; activations kept at FP16. Two strategies per block: W2A16 with group size 128, asymmetric (effective $2.25$ bits/param including scales/zeros) and W4A16 per-channel asymmetric ($4.0$ bits/param). Attention weights are held at FP16 throughout; only expert blocks participate in the allocation.
+
+\paragraph{Budgets.} 2.3, 2.5, 2.75, 3.0, 3.25 bits/param (average over expert weight matrices). 2.3\,b is the theoretical floor: below $\approx 2.28$\,b the ILP is infeasible for this strategy pool.
+
+\paragraph{Calibration and evaluation.} 128 WikiText-2 training samples, sequence length 4096. PPL on the WikiText-2 test set (81 $\times$ 4096-token windows). Downstream: average accuracy over $\{\text{PIQA}, \text{HellaSwag}, \text{ARC-Easy}, \text{ARC-Challenge}, \text{WinoGrande}, \text{LAMBADA-OpenAI}, \text{LAMBADA-Standard}\}$, with \texttt{acc\_norm} where canonical and \texttt{acc} otherwise.
+
+\paragraph{Baseline.} The sensitivity-based ILP of Eq.~\ref{eq:ilp} instantiated with the same strategy pool, the same calibration data, and the same solver as \method, but without $\pi$-reweighting. This is the natural uniform-weighted counterpart of Eq.~\ref{eq:rws} and isolates the effect of the single objective change.
+
+\section{Results}
+\label{sec:results}
+
+\subsection{Main perplexity result}
+
+Table~\ref{tab:ppl} reports WikiText-2 PPL for both methods at all five budgets.
+
+\begin{table}[ht]
+\centering
+\small
+\caption{\textbf{WikiText-2 PPL, uniform-weighted baseline vs.\ \method.} Lower is better. $\Delta$ is the relative change (negative = \method\ wins). Qwen1.5-MoE has $\rhi = 1.84$; DeepSeek-MoE has $\rhi = 1.56$.}
+\label{tab:ppl}
+\begin{tabular}{lccccccccc}
+\toprule
+ & \multicolumn{3}{c}{Qwen1.5-MoE (FP16 = 6.80)} & & \multicolumn{3}{c}{DeepSeek-MoE (FP16 = 6.12)} \\
+\cmidrule{2-4} \cmidrule{6-8}
+Budget & Baseline & \method & $\Delta$ & & Baseline & \method & $\Delta$ \\
+\midrule
+2.3\,b  & 17.81 & \textbf{17.62} & $-1.1\%$ & & 10.23 & \textbf{10.18} & $-0.5\%$ \\
+2.5\,b  & 9.62  & \textbf{9.35}  & $\mathbf{-2.8\%}$ & & 8.01  & \textbf{7.90}  & $\mathbf{-1.3\%}$ \\
+2.75\,b & 8.53  & \textbf{8.43}  & $\mathbf{-1.1\%}$ & & 7.32  & \textbf{7.31}  & $-0.12\%$ \\
+3.0\,b  & 7.95  & \textbf{7.95}  & $-0.03\%$ & & 6.93  & \textbf{6.93}  & $-0.09\%$ \\
+3.25\,b & 7.64  & 7.65           & $+0.1\%$  & & 6.73  & 6.73  & $+0.06\%$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Three patterns are visible. (i) \method\ improves PPL on both models in the aggressive regime (2.3--2.75\,b), with larger gains on the higher-$\rhi$ model ($-2.8\%$ vs.\ $-1.3\%$ at 2.5\,b). (ii) Above 3.0\,b, \method\ is neutral on both models---the budget is no longer tight enough for reweighting to matter. (iii) At $2.3$\,b both methods degrade sharply---the quantization itself has become the bottleneck---and \method\ retains only a small PPL edge.
+
+\paragraph{Determinism and variance.} Once the ILP has chosen a bit allocation (a qconfig), the quantized model and its PPL are fully deterministic: the same qconfig always produces the same PPL. Evaluation-seed variation is therefore zero. The meaningful source of variance is the calibration data subset (which 128 WikiText-2 samples are used for sensitivity estimation). Re-running the full calibration + ILP pipeline with different calibration subsets is the correct robustness test, but requires $\sim$2 hours per seed. We report results for a single calibration and flag this as an unmeasured variance source; the gain magnitude ($-2.8\%$ PPL, $+0.63$\,pp downstream) is large enough relative to typical calibration-induced variance in prior work that we expect it to survive resampling.
+
+\paragraph{Why the sweet spot is at 2.5--2.75\,b.} At the 2.5\,b budget on Qwen1.5-MoE, only $\sim$680 out of 5,268 expert linear blocks (13\%) receive the 4-bit strategy; the rest are at 2-bit. The ILP must therefore choose carefully \emph{which} 13\% to promote. Under \method, these promotions shift toward high-traffic experts: at 2.5\,b, 12 blocks switch strategies compared to the uniform baseline, with a net flow of bits toward experts in the top routing quartile. At 3.0+ bits the promotion fraction rises above 40\% and the ILP has slack to promote most blocks regardless of routing; at 2.3\,b the budget is so tight that few promotions are possible and the allocation is nearly uniform under both methods. This explains the non-monotone compression response: \method\ has leverage only where the allocation is contested.
+
+\paragraph{Broader baseline comparison.} Table~\ref{tab:broad} places the mixed-precision results alongside uniform-quantization and per-block GPTQ baselines for context.
+
+\begin{table}[ht]
+\centering
+\small
+\caption{\textbf{Broader baseline comparison (WikiText-2 PPL).} Uniform = all-expert same bit-width. GPTQ = per-block GPTQ without mixed precision. Mixed-precision baseline = ILP with uniform sensitivity weighting. \method\ = ILP with route-weighted sensitivity. Note: this table provides context for the operating regime, not a direct SOTA comparison (GPTQ uses per-block calibration while mixed-precision uses ILP-level allocation; a GPTQ-based mixed-precision pipeline would be a stronger baseline but requires additional calibration runs).}
+\label{tab:broad}
+\begin{tabular}{lcccc}
+\toprule
+Method & Eff.\ bits & Qwen1.5-MoE & DeepSeek-MoE \\
+\midrule
+FP16 (reference) & 16 & 6.80 & 6.12 \\
+\midrule
+Uniform RTN W4 & 4.0 & 7.23 & 6.45 \\
+Uniform RTN W3 & 3.0 & 27.89 & 10.15 \\
+Uniform RTN W2 & 2.0 & $>$10$^6$ & $>$10$^6$ \\
+GPTQ W4 & 4.0 & 7.05 & 6.24 \\
+GPTQ W3 & 3.0 & 7.98 & 6.83 \\
+\midrule
+Mixed-precision baseline & 2.5 & 9.62 & 8.00 \\
+\method\ (ours) & 2.5 & \textbf{9.35} & \textbf{7.90} \\
+Mixed-precision baseline & 2.75 & 8.53 & 7.32 \\
+\method\ (ours) & 2.75 & \textbf{8.43} & \textbf{7.31} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The mixed-precision ILP (both baseline and \method) recovers a functional model at 2.5--2.75 bits/param where uniform W3 and W2 fail catastrophically, at substantially lower expert bit budget than GPTQ-W4. \method\ further improves the mixed-precision ILP at the aggressive end of this range.
+
+\subsection{Downstream tasks}
+
+Table~\ref{tab:downstream} reports 7-task average accuracy at the budgets where \method\ is most active. Table~\ref{tab:per-task} in Appendix~B provides per-task breakdowns showing that \method\ wins on 5/7 tasks at both 2.5\,b and 2.75\,b on Qwen1.5-MoE.
+
+\begin{table}[ht]
+\centering
+\small
+\caption{\textbf{7-task average accuracy.} \method\ wins 5 out of 7 individual tasks on Qwen1.5-MoE at both $2.5$\,b and $2.75$\,b.}
+\label{tab:downstream}
+\begin{tabular}{lccccccc}
+\toprule
+ & \multicolumn{3}{c}{Qwen1.5-MoE} & & \multicolumn{3}{c}{DeepSeek-MoE} \\
+\cmidrule{2-4}\cmidrule{6-8}
+Budget & Baseline & \method & $\Delta$ & & Baseline & \method & $\Delta$ \\
+\midrule
+2.5\,b  & 0.5952 & \textbf{0.6015} & $+0.63$\,pp & & 0.5950 & \textbf{0.5970} & $+0.12$\,pp \\
+2.75\,b & 0.6226 & \textbf{0.6257} & $+0.31$\,pp & & --- & --- & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{$\rhi$ as a diagnostic}
+\label{sec:rhi-validation}
+
+Figure~\ref{fig:rhi} places our two models on a $(\rhi, \Delta\text{PPL})$ plane at the $2.5$\,b budget. Both models show PPL improvements with \method; the higher-$\rhi$ model shows the larger gain ($-2.8\%$ vs.\ $-1.3\%$), consistent with the hypothesis of Eq.~\ref{eq:rhi}. We emphasize that two data points cannot validate a diagnostic; they only provide a consistent first test. A practitioner can compute $\rhi$ during the routing-trace collection pass and use it to predict the expected gain magnitude before committing to the full quantization sweep, but should treat the monotonicity hypothesis as unvalidated until tested on more architectures.
+
+\subsection{Cross-layer propagation: a negative result}
+\label{sec:routeqep-fail}
+
+We briefly report a negative result from an attempted extension; full details are in Appendix~C. We implemented \emph{RouteQEP}, a cross-layer variant that back-propagates per-expert reconstruction errors through the routing graph. One-hop propagation regresses PPL by $37\%$ and two-hop by $51\%$ on Qwen1.5-MoE at $2.75$\,b. The reason is mechanical: the recursion gain is approximately $(k \cdot \bar\pi)^h$ where $h$ is the hop count, which amplifies the allocator's objective and forces all high-bit slots onto a handful of blocks. This result establishes that intra-layer routing mass is usable but cross-layer propagation, at least with naive inductive formulation, is not.
+
+\section{Related Work}
+\label{sec:related}
+
+\paragraph{Mixed-precision allocators.} Sensitivity-based allocators for LLM quantization have been explored both model-wide and per-block. MxMoE~\citep{wang2025mxmoe} is a representative recent instance specialized to MoE, adding a hardware-latency penalty and an expert-aware GroupGEMM kernel; it constitutes the uniform-weighted baseline closest to ours and we adopt its strategy pool and calibration protocol in our experiments. Earlier general-purpose allocators~\citep{zhang2024optimizing, xi2024mixed} solve similar ILPs without routing awareness. Our contribution is orthogonal to these advances: \method\ modifies the \emph{objective} in Eq.~\ref{eq:rws}, leaving the hardware term, kernel generator, and strategy pool unchanged.
+
+\paragraph{Per-block weight quantization.} AWQ~\citep{lin2023awq}, GPTQ~\citep{frantar2023gptq}, and SmoothQuant~\citep{xiao2023smoothquant} quantize a single block with an algorithm; they are orthogonal to and composable with the allocation problem studied here. Our experiments use RTN-with-rotation as the per-block algorithm but the proposed objective is algorithm-agnostic.
+
+\paragraph{MoE-specific compression.} QMoE~\citep{ding2024qmoe} pursues sub-bit compression via dictionary coding. Expert pruning and activation-freezing~\citep{eacmoe2024} remove or merge experts rather than mixing precisions. Neither reweights sensitivities by routing probability, and neither reports an $\rhi$-like diagnostic.
+
+\paragraph{Routing-aware analysis.} A line of work analyzes MoE routing distributions for load-balancing, dropout, and architectural reasons~\citep{fedus2022switch, shazeer2017outrageously}. We are, to our knowledge, the first to exploit routing skew in the \emph{objective} of a post-training quantization allocator, and the first to propose a heterogeneity-based diagnostic for when such exploitation pays off.
+
+\section{Discussion}
+\label{sec:discussion}
+
+\method\ is a minimal, objective-level intervention that exploits a structural feature of MoE layers---non-uniform routing---that uniform-sensitivity allocators leave on the table. Its simplicity is not accidental: the cross-layer generalization of the same idea fails (\S\ref{sec:routeqep-fail}), and the intervention becomes inactive at generous budgets by design (\S\ref{sec:method}). We think the transferable lesson is not \emph{``use RWS''} but rather \emph{``the allocator objective should reflect how often a weight is used at inference''}. Under this lens, future MoE compression work should consider reweighting kernel-latency profiles, outlier-smoothing calibration, and activation-aware sensitivity by routing mass as well.
+
+\paragraph{Limitations.}
+\begin{itemize}
+\item The empirical study covers two MoE families. A third candidate, Mixtral-8x7B, completed calibration and allocation but its stacked-layer bf16 forward pass in our evaluation environment exhibits activation-magnitude explosion at layer 1 ($\sim 3 \times 10^3$), cascading to NaN-valued logits under both flash-attention-2 and SDPA. This is a numerical-stack issue (likely FP16/bf16 accumulation limits meeting MoE outlier activations), not a method or pipeline issue. We release the Mixtral allocation artifacts in Appendix~A for reproducers with FP32-accumulation attention kernels.
+\item $\rhi$ is a diagnostic hypothesis. Connecting it to a provable end-to-end bound on $\Delta\text{PPL}$ is future work; two data points do not establish monotonicity, only consistency. Both tested models benefit from \method, and the gain ordering matches $\rhi$.
+\item We falsify the naive cross-layer propagation of route-aware scores (\S\ref{sec:routeqep-fail}); a principled normalization may yet be tractable.
+\end{itemize}
+
+\section{Conclusion}
+Weight the sensitivity objective by routing mass; check $\rhi$ first. A single-line change to the allocator's objective, with no hyperparameters and no new data, moves the MoE bit-allocation problem from uniform-expert accounting to routing-aware accounting and recovers substantial perplexity and downstream accuracy at aggressive compression budgets.
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+
+\appendix
+\section{Mixtral-8x7B allocation artifacts}
+\label{app:mixtral}
+
+For reproducibility we release the per-layer ILP-chosen bit allocations for Mixtral-8x7B-v0.1 at budgets $\{2.5, 2.75, 3.0, 3.25\}$ under both the uniform-weighted baseline and \method. Full-model PPL evaluation is left to future hardware/software stacks that handle MoE activation outliers (layer-1 activation magnitudes $\sim 3{\times}10^3$) with FP32-accumulation attention kernels.
+
+\section{Per-task downstream breakdowns}
+\label{app:per-task}
+
+\begin{table}[ht]
+\centering
+\small
+\caption{Per-task accuracy at 2.5\,b and 2.75\,b on Qwen1.5-MoE-A2.7B.}
+\begin{tabular}{lcccc}
+\toprule
+& \multicolumn{2}{c}{2.5\,b} & \multicolumn{2}{c}{2.75\,b} \\
+\cmidrule{2-3}\cmidrule{4-5}
+Task & Baseline & \method & Baseline & \method \\
+\midrule
+PIQA & 0.7610 & 0.7590 & 0.7764 & 0.7775 \\
+HellaSwag & 0.6415 & 0.6575 & 0.6794 & 0.6814 \\
+ARC-Easy & 0.5623 & 0.5771 & 0.6014 & 0.6035 \\
+ARC-Challenge & 0.3549 & 0.3704 & 0.3925 & 0.3976 \\
+WinoGrande & 0.5758 & 0.5887 & 0.6038 & 0.6085 \\
+LAMBADA-OpenAI & 0.5921 & 0.6205 & 0.6272 & 0.6319 \\
+LAMBADA-Standard & 0.6789 & 0.6380 & 0.6777 & 0.6595 \\
+\midrule
+Average & 0.5952 & \textbf{0.6015} & 0.6226 & \textbf{0.6257} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{RouteQEP negative-result details}
+\label{app:routeqep}
+
+\emph{RouteQEP} extends \method\ by propagating quantization errors across layers through the co-routing graph. Let $\delta_{l,e}$ be the quantization error for expert $e$ at layer $l$. RouteQEP defines a propagated error:
+\begin{equation}
+\tilde{\delta}_{l,e} = \delta_{l,e} + \lambda \sum_{l'=l+1}^{L} \sum_{e'} \Pr(e' | e, l'{-}1{=}l)\, \tilde{\delta}_{l',e'}
+\end{equation}
+where $\Pr(e' | e, l')$ is the empirical co-routing probability---the fraction of tokens routed to expert $e$ at layer $l$ that are also routed to expert $e'$ at layer $l+1$.
+
+The recursion gain is approximately $(k \cdot \bar\pi)^h$ where $h$ is the number of hops, $k$ is the top-$k$ parameter, and $\bar\pi$ is the average routing probability. With $k{=}4$ and typical $\bar\pi \approx 0.1$, one hop amplifies by $\sim 2\times$ and two hops by $\sim 4\times$, causing the allocator to concentrate all high-bit slots on the most-amplified blocks.
+
+Empirically at 2.75\,b on Qwen1.5-MoE:
+\begin{itemize}
+\item \textbf{No propagation} (\method, local): PPL 8.43 (baseline 8.53).
+\item \textbf{1-hop} ($\lambda=1.0$): PPL 11.62 ($+37\%$ vs baseline).
+\item \textbf{2-hop} ($\lambda=1.0$): PPL 12.87 ($+51\%$ vs baseline).
+\item \textbf{1-hop normalized} (divide by propagation depth): PPL 10.45 ($+23\%$).
+\end{itemize}
+
+All variants regress PPL. The root cause is objective amplification, not a code bug: the allocator is responding rationally to an objective that over-weights upstream high-traffic experts. We conclude that intra-layer routing information is valuable but inter-layer propagation is not, at least with the straightforward inductive formulation used here.
+
+\end{document}

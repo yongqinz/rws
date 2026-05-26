@@ -1,0 +1,24 @@
+\section{Experimental Setup}
+\label{sec:setup}
+
+\paragraph{Models.}
+We evaluate on three MoE architectures spanning different sizes, expert counts, and routing characteristics:
+\begin{itemize}
+\item \textbf{Qwen1.5-MoE-A2.7B} \citep{bai2023qwen}: 24 MoE layers, 60 routed + 1 shared expert per layer, top-4 routing, $\rhi = 1.84$.
+\item \textbf{Mixtral-8x7B} \citep{jiang2024mixtral}: 32 MoE layers, 8 experts per layer, top-2 routing, $\rhi = 1.84$.
+\item \textbf{DeepSeek-MoE-16B} \citep{deepseekai2024deepseekv3}: 28 MoE layers, 64 routed + 2 shared experts per layer, top-6 routing, $\rhi = 1.56$.
+\end{itemize}
+The three models cover a range of routing heterogeneity: Qwen and Mixtral share $\rhi\!=\!1.84$ but differ in expert count (61 vs.\ 8) and top-$k$ (4 vs.\ 2), while DeepSeek has more uniform routing ($\rhi\!=\!1.56$) with a larger expert pool.
+
+\paragraph{Quantization.} Weight-only quantization with FP16 activations. Strategy pool: \{W2A16/G128/asym (2.25 bits/param), W4A16/per-channel/asym (4.0 bits/param)\}. Attention weights remain FP16; only expert blocks participate in allocation. We use RTN (round-to-nearest) as the per-block quantization algorithm \citep{nagel2020adaround}.
+
+\paragraph{Budgets.} 2.3, 2.5, 2.75, 3.0, 3.25 bits/param, where the bit budget is defined as the average bits per \emph{expert weight parameter} (excluding attention weights, which remain FP16). For example, a 2.5\,b budget means the total storage for expert weights equals $2.5 \times |\text{expert params}|$ bits, with the ILP allocating each block to either 2.25\,b (W2A16/G128) or 4.0\,b (W4A16) to meet this constraint. The 2.3\,b budget is near the ILP feasibility floor for this strategy pool.
+
+\paragraph{Calibration \& evaluation.} 128 WikiText-2 training samples, sequence length 4096. PPL on WikiText-2 test (81$\times$4096-token windows). Downstream: average accuracy over 7 tasks---PIQA, HellaSwag, ARC-Easy, ARC-Challenge, WinoGrande, LAMBADA-OpenAI, LAMBADA-Standard---using \texttt{acc\_norm} where canonical and \texttt{acc} otherwise.
+
+\paragraph{Baselines.}
+\begin{enumerate}
+\item \textbf{Uniform RTN}: all experts at the same bit-width (W2, W3, or W4).
+\item \textbf{GPTQ} \citep{frantar2023gptq}: per-block GPTQ without mixed precision (W3, W4).
+\item \textbf{MxMoE} \citep{duanmu2025mxmoe}: ILP-based mixed-precision allocation with uniform sensitivity weighting---the direct ablation isolating \method's contribution.
+\end{enumerate}

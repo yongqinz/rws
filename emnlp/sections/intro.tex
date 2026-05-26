@@ -1,0 +1,24 @@
+\section{Introduction}
+\label{sec:intro}
+
+Mixture-of-Experts (MoE) architectures have become a dominant design for scaling language models efficiently. Models such as Mixtral-8x7B \citep{jiang2024mixtral}, Qwen1.5-MoE \citep{bai2023qwen}, DeepSeek-V3 \citep{deepseekai2024deepseekv3}, and Switch Transformers \citep{fedus2022switch} place 80--95\% of their parameters in expert feed-forward blocks, while activating only a sparse subset per token through a learned router \citep{shazeer2017outrageously,lepikhin2021gshard}. This sparsity creates an opportunity for efficient serving, but also poses a challenge for post-training quantization: the bit-allocation problem---\emph{how many bits to assign each expert}---must respect a global budget while minimizing output quality degradation \citep{duanmu2025mxmoe,li2024quantmoebench,frantar2023qmoe}.
+
+Sensitivity-based allocators solve this by measuring per-block reconstruction loss under each candidate quantization strategy and selecting the assignment that minimizes total loss subject to a bit budget \citep{yao2021hawqv3,duanmu2025mxmoe}. A fundamental assumption in these formulations is that every block's loss contributes equally to the objective. For dense transformers this is reasonable; for MoE models it is not. Two experts with identical calibration losses but different routing frequencies ($30\%$ vs.\ $0.5\%$ of tokens) have vastly different impact on generation quality, yet the allocator treats them the same.
+
+We propose \longmethod (\method), a modification to the allocation objective that combines two orthogonal information sources: per-block quantization sensitivity (which blocks suffer from low-bit quantization) and empirical routing frequency (which blocks matter most at inference). Before the solver runs, we scale each expert's sensitivity by a routing-aware weight. The modification requires no tuning of weighting strength or additional calibration data, and uses only routing statistics already collected during calibration.
+
+We additionally introduce the \emph{Route Heterogeneity Index} ($\rhi$), a scalar derived from the routing trace that quantifies how skewed the expert access distribution is:
+\begin{equation}
+\label{eq:rhi_intro}
+  \rhi \;=\; \frac{1}{L}\sum_{l=1}^{L}
+    \bigl[\log N - H\!\bigl(\piprob_l\bigr) + 1\bigr],
+\end{equation}
+where $H$ is Shannon entropy, $N$ is the number of routed experts, and $\piprob_l$ is the normalized access-frequency vector at layer~$l$. A model with uniform routing has $\rhi\!=\!1$; higher values indicate greater skew and, we hypothesize, greater leverage for \method.
+
+Our contributions are:
+\begin{enumerate}
+\item \textbf{\method} (\S\ref{sec:method}): route-weighted sensitivity for ILP-based mixed-precision allocation. Zero hyperparameters, zero extra compute, drop-in compatible.
+\item \textbf{Route Heterogeneity Index} (\S\ref{sec:rhi}): a preliminary diagnostic scalar that quantifies routing skew and is consistent with the direction of \method\ gains in our experiments.
+\item \textbf{Empirical validation} (\S\ref{sec:results}): on three MoE architectures---Qwen1.5-MoE-A2.7B ($\rhi\!=\!1.84$), Mixtral-8x7B ($\rhi\!=\!1.84$), and DeepSeek-MoE-16B ($\rhi\!=\!1.56$)---\method\ reduces WikiText-2 PPL by $2.8\%$, $1.0\%$, and $1.3\%$ respectively at 2.5\,bits/param, with consistent downstream accuracy improvements.
+\item \textbf{Negative result} (\S\ref{sec:results}): a cross-layer propagation extension regresses PPL by 37--51\%, suggesting that routing information should be used locally.
+\end{enumerate}

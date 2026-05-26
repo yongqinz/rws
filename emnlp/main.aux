@@ -1,0 +1,150 @@
+\relax 
+\bibstyle{acl_natbib}
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{jiang2024mixtral}
+\citation{bai2023qwen}
+\citation{deepseekai2024deepseekv3}
+\citation{fedus2022switch}
+\citation{shazeer2017outrageously,lepikhin2021gshard}
+\citation{duanmu2025mxmoe,li2024quantmoebench,frantar2023qmoe}
+\citation{yao2021hawqv3,duanmu2025mxmoe}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\newlabel{sec:intro}{{1}{1}{Introduction}{section.1}{}}
+\newlabel{eq:rhi_intro}{{1}{1}{Introduction}{equation.1}{}}
+\citation{shazeer2017outrageously}
+\citation{fedus2022switch,zoph2022stmoe}
+\citation{frantar2023gptq,lin2024awq,xiao2023smoothquant,dettmers2022llmint8}
+\citation{yao2021hawqv3}
+\citation{frantar2023gptq}
+\citation{duanmu2025mxmoe,li2024quantmoebench}
+\citation{duanmu2025mxmoe}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Background}{2}{section.2}\protected@file@percent }
+\newlabel{sec:background}{{2}{2}{Background}{section.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Mixture-of-Experts}{2}{subsection.2.1}\protected@file@percent }
+\newlabel{eq:moe}{{2}{2}{Mixture-of-Experts}{equation.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Mixed-Precision Quantization for MoE}{2}{subsection.2.2}\protected@file@percent }
+\newlabel{eq:ilp}{{3}{2}{Mixed-Precision Quantization for MoE}{equation.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}The Routing--Sensitivity Gap}{2}{subsection.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Method}{2}{section.3}\protected@file@percent }
+\newlabel{sec:method}{{3}{2}{Method}{section.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Route-Weighted Sensitivity}{2}{subsection.3.1}\protected@file@percent }
+\newlabel{eq:weight}{{4}{2}{Route-Weighted Sensitivity}{equation.4}{}}
+\citation{zhou2022expertchoice}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Overview of \textsc  {RWS}\xspace  . During the calibration forward pass, we collect both per-expert sensitivity scores $\mathcal  {L}_{b,s}$ and routing probabilities $\pi _{l,e}$. \textsc  {RWS}\xspace  \ weights each expert's sensitivity by $\pi _{l,e}$ before feeding it to the ILP allocator.}}{3}{figure.caption.1}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:framework}{{1}{3}{Overview of \method . During the calibration forward pass, we collect both per-expert sensitivity scores $\Loss _{b,s}$ and routing probabilities $\piprob _{l,e}$. \method \ weights each expert's sensitivity by $\piprob _{l,e}$ before feeding it to the ILP allocator}{figure.caption.1}{}}
+\newlabel{eq:rws}{{5}{3}{Route-Weighted Sensitivity}{equation.5}{}}
+\@writefile{toc}{\contentsline {paragraph}{Loss computation.}{3}{section*.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Why $(1 + w)$ rather than raw $\pi $.}{3}{section*.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Approximation caveat.}{3}{section*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Selection frequency vs.\ gate weight.}{3}{section*.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Shared experts.}{3}{section*.6}\protected@file@percent }
+\citation{bai2023qwen}
+\citation{jiang2024mixtral}
+\citation{deepseekai2024deepseekv3}
+\citation{nagel2020adaround}
+\citation{frantar2023gptq}
+\citation{duanmu2025mxmoe}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Route Heterogeneity Index}{4}{subsection.3.2}\protected@file@percent }
+\newlabel{sec:rhi}{{3.2}{4}{Route Heterogeneity Index}{subsection.3.2}{}}
+\newlabel{eq:rhi}{{6}{4}{Route Heterogeneity Index}{equation.6}{}}
+\@writefile{toc}{\contentsline {paragraph}{Scope of the diagnostic.}{4}{section*.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Expected behavior.}{4}{section*.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Experimental Setup}{4}{section.4}\protected@file@percent }
+\newlabel{sec:setup}{{4}{4}{Experimental Setup}{section.4}{}}
+\@writefile{toc}{\contentsline {paragraph}{Models.}{4}{section*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Quantization.}{4}{section*.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Budgets.}{4}{section*.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Calibration \& evaluation.}{4}{section*.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Baselines.}{4}{section*.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Results}{5}{section.5}\protected@file@percent }
+\newlabel{sec:results}{{5}{5}{Results}{section.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Main Results}{5}{subsection.5.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Main results on three MoE architectures. \textbf  {Bits}: effective bits/param. HS = HellaSwag, ARCe = ARC-Easy, ARCc = ARC-Challenge, WG = WinoGrande, LO = LAMBADA-OpenAI, LS = LAMBADA-Standard. \textbf  {Avg.}: 7-task average. \textbf  {Bold}: best among all mixed-precision methods at each budget. $\dagger $: RWS PPL improvement over MxMoE $>$0.5\%. \underline  {Underlined}: $>$1\%.}}{6}{table.caption.14}\protected@file@percent }
+\newlabel{tab:main}{{1}{6}{Main results on three MoE architectures. \textbf {Bits}: effective bits/param. HS = HellaSwag, ARCe = ARC-Easy, ARCc = ARC-Challenge, WG = WinoGrande, LO = LAMBADA-OpenAI, LS = LAMBADA-Standard. \textbf {Avg.}: 7-task average. \textbf {Bold}: best among all mixed-precision methods at each budget. $\dagger $: RWS PPL improvement over MxMoE $>$0.5\%. \underline {Underlined}: $>$1\%}{table.caption.14}{}}
+\@writefile{toc}{\contentsline {paragraph}{RWS consistently improves mixed-precision allocation.}{6}{section*.15}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces WikiText-2 PPL at all evaluated budgets. \textbf  {Bold}: RWS improves.}}{7}{table.caption.19}\protected@file@percent }
+\newlabel{tab:ppl_all}{{2}{7}{WikiText-2 PPL at all evaluated budgets. \textbf {Bold}: RWS improves}{table.caption.19}{}}
+\@writefile{toc}{\contentsline {paragraph}{Frequency-only allocation fails catastrophically.}{7}{section*.16}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Gains concentrate at 2.5--2.75\,bits.}{7}{section*.17}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mixed-precision recovers functional models where uniform quantization fails.}{7}{section*.18}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces $\mathrm  {RHI}$ vs.\ $\Delta $PPL at 2.5\,bits/param. Models with higher routing heterogeneity tend to benefit more from \textsc  {RWS}\xspace  .}}{7}{figure.caption.20}\protected@file@percent }
+\newlabel{fig:rhi}{{2}{7}{$\rhi $ vs.\ $\Delta $PPL at 2.5\,bits/param. Models with higher routing heterogeneity tend to benefit more from \method }{figure.caption.20}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}RHI as a Preliminary Diagnostic}{7}{subsection.5.2}\protected@file@percent }
+\newlabel{sec:rhi-validation}{{5.2}{7}{RHI as a Preliminary Diagnostic}{subsection.5.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}PPL Improvement Across Budgets}{7}{subsection.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Allocation Analysis}{7}{subsection.5.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces PPL improvement (\%) vs.\ bit budget across three models. \textsc  {RWS}\xspace  \ improves over MxMoE in the aggressive regime (shaded), with all models showing positive gains.}}{8}{figure.caption.21}\protected@file@percent }
+\newlabel{fig:ppl_improve}{{3}{8}{PPL improvement (\%) vs.\ bit budget across three models. \method \ improves over MxMoE in the aggressive regime (shaded), with all models showing positive gains}{figure.caption.21}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Allocation heatmaps at 2.5\,bits (Qwen1.5-MoE). Dark = W4A16, light = W2A16. Green borders mark blocks that differ between baseline and RWS.}}{8}{figure.caption.23}\protected@file@percent }
+\newlabel{fig:alloc}{{4}{8}{Allocation heatmaps at 2.5\,bits (Qwen1.5-MoE). Dark = W4A16, light = W2A16. Green borders mark blocks that differ between baseline and RWS}{figure.caption.23}{}}
+\@writefile{toc}{\contentsline {paragraph}{Why small routing differences matter.}{8}{section*.22}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Frequency-only vs.\ sensitivity-based allocation across three models. Freq-Only (orange) fails catastrophically at 2.5--2.75\,bits on DeepSeek (log scale) and shows non-monotonic behavior on Qwen (2.75b PPL $>$ 2.5b). RWS (green) consistently matches or improves upon MxMoE (blue).}}{8}{figure.caption.24}\protected@file@percent }
+\newlabel{fig:freq_only}{{5}{8}{Frequency-only vs.\ sensitivity-based allocation across three models. Freq-Only (orange) fails catastrophically at 2.5--2.75\,bits on DeepSeek (log scale) and shows non-monotonic behavior on Qwen (2.75b PPL $>$ 2.5b). RWS (green) consistently matches or improves upon MxMoE (blue)}{figure.caption.24}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Why Not Route-Only Allocation?}{8}{subsection.5.5}\protected@file@percent }
+\newlabel{sec:freq-only}{{5.5}{8}{Why Not Route-Only Allocation?}{subsection.5.5}{}}
+\@writefile{toc}{\contentsline {paragraph}{Frequency-only is consistently worse.}{8}{section*.26}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Frequency $\neq  $ sensitivity.}{8}{section*.27}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Frequency-only vs.\ sensitivity-based allocation. Freq-Only assigns W4 to the highest-traffic experts, ignoring sensitivity. \textbf  {Bold}: best among three methods.}}{9}{table.caption.25}\protected@file@percent }
+\newlabel{tab:freq_only}{{3}{9}{Frequency-only vs.\ sensitivity-based allocation. Freq-Only assigns W4 to the highest-traffic experts, ignoring sensitivity. \textbf {Bold}: best among three methods}{table.caption.25}{}}
+\@writefile{toc}{\contentsline {paragraph}{Non-monotonic behavior reveals the misalignment.}{9}{section*.28}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{RWS combines both signals.}{9}{section*.29}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Calibration-subset sensitivity at 2.5\,bits. Three seeds for calibration data selection. RWS outperforms baseline at every seed on both models.}}{9}{table.caption.32}\protected@file@percent }
+\newlabel{tab:seed}{{4}{9}{Calibration-subset sensitivity at 2.5\,bits. Three seeds for calibration data selection. RWS outperforms baseline at every seed on both models}{table.caption.32}{}}
+\@writefile{toc}{\contentsline {paragraph}{Scope.}{9}{section*.30}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6}Robustness and Limitations}{9}{subsection.5.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Calibration-subset sensitivity.}{9}{section*.31}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Per-task analysis.}{9}{section*.33}\protected@file@percent }
+\citation{shazeer2017outrageously}
+\citation{lepikhin2021gshard}
+\citation{fedus2022switch}
+\citation{jiang2024mixtral}
+\citation{bai2023qwen}
+\citation{deepseekai2024deepseekv2,deepseekai2024deepseekv3}
+\citation{zoph2022stmoe}
+\citation{zhou2022expertchoice}
+\citation{frantar2023gptq}
+\citation{lin2024awq}
+\citation{xiao2023smoothquant}
+\citation{dettmers2022llmint8}
+\citation{dettmers2024spqr}
+\citation{dettmers2023qlora}
+\citation{chee2024quip,tseng2024quipsharp}
+\citation{egiazarian2024aqlm}
+\citation{shao2024omniquant}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.7}Hessian-Based Sensitivity: A Reference-Free Baseline}{10}{subsection.5.7}\protected@file@percent }
+\newlabel{sec:hessian}{{5.7}{10}{Hessian-Based Sensitivity: A Reference-Free Baseline}{subsection.5.7}{}}
+\@writefile{toc}{\contentsline {paragraph}{Hessian underperforms reconstruction loss.}{10}{section*.34}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Hessian sensitivity is nearly uniform across experts.}{10}{section*.35}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{RWS helps Hessian more than it helps reconstruction loss.}{10}{section*.36}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.8}Cross-Layer Propagation: A Cautionary Ablation}{10}{subsection.5.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Related Work}{10}{section.6}\protected@file@percent }
+\newlabel{sec:related}{{6}{10}{Related Work}{section.6}{}}
+\@writefile{toc}{\contentsline {paragraph}{MoE architectures.}{10}{section*.37}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{LLM quantization.}{10}{section*.38}\protected@file@percent }
+\citation{dong2019hawq,yao2021hawqv3}
+\citation{duanmu2025mxmoe}
+\citation{li2024quantmoebench}
+\citation{frantar2023qmoe}
+\citation{chen2025eacmoe}
+\citation{yang2024moei2}
+\citation{komatsuzaki2023sparseupcycling}
+\citation{fedus2022switch}
+\citation{zhou2022expertchoice}
+\bibstyle{acl_natbib}
+\bibdata{references}
+\@writefile{toc}{\contentsline {paragraph}{Mixed-precision allocation.}{11}{section*.39}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{MoE-specific compression.}{11}{section*.40}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Routing analysis.}{11}{section*.41}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{11}{section.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Limitations.}{11}{section*.42}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A}Per-Task Downstream Breakdowns}{11}{section.A}\protected@file@percent }
+\newlabel{app:per-task}{{A}{11}{Per-Task Downstream Breakdowns}{section.A}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {B}Allocation Artifacts}{11}{section.B}\protected@file@percent }
+\newlabel{app:allocation}{{B}{11}{Allocation Artifacts}{section.B}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {C}RouteQEP Negative-Result Details}{11}{section.C}\protected@file@percent }
+\newlabel{app:routeqep}{{C}{11}{RouteQEP Negative-Result Details}{section.C}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Per-task accuracy at 2.5\,bits/param for all three models. \textbf  {Bold}: RWS improvement.}}{12}{table.caption.43}\protected@file@percent }
+\gdef \@abspage@last{12}

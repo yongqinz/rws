@@ -1,0 +1,36 @@
+\section{Background}
+\label{sec:background}
+
+\subsection{Mixture-of-Experts}
+
+An MoE layer consists of $N$ expert sub-networks $\{E_e\}_{e=1}^{N}$ and a learnable router $R$ \citep{shazeer2017outrageously}. For an input token $x$, the router produces logits $\ell = R(x) \in \mathbb{R}^N$; a top-$k$ mechanism selects indices $\mathcal{T}(x) \subset [N]$ and assigns normalized weights $w_e(x) = \mathrm{softmax}(\ell)_e$ for $e \in \mathcal{T}(x)$. The layer output is a weighted combination:
+\begin{equation}
+\label{eq:moe}
+  y \;=\; \sum_{e \in \mathcal{T}(x)} w_e(x)\, E_e(x).
+\end{equation}
+The routing distribution $\piprob_l \in \Delta^{N-1}$ at layer $l$ is defined as the normalized frequency with which each expert appears in the top-$k$ set over a calibration corpus. In practice, $\piprob_l$ is highly non-uniform: a small subset of experts receives the majority of routing mass \citep{fedus2022switch,zoph2022stmoe}.
+
+\subsection{Mixed-Precision Quantization for MoE}
+
+Post-training quantization (PTQ) reduces a model's memory footprint by replacing full-precision weights with low-bit representations \citep{frantar2023gptq,lin2024awq,xiao2023smoothquant,dettmers2022llmint8}. For MoE models, the key question is \emph{mixed-precision allocation}: assigning different bit-widths to different expert blocks to minimize output degradation under a global bit budget.
+
+A standard pipeline proceeds in three stages:
+\begin{enumerate}
+\item \textbf{Calibration.} A small dataset $\mathcal{D}_{\mathrm{cal}}$ (e.g., 128 samples from WikiText-2) is used to measure per-block reconstruction loss $\Loss_{b,s}$ for each candidate strategy $s \in \mathcal{S}$ and each linear block $b$.
+\item \textbf{Allocation.} An optimizer (typically ILP \citep{yao2021hawqv3} or greedy search) solves:
+\begin{align}
+\label{eq:ilp}
+  \min_{x_{b,s} \in \{0,1\}} \;&\sum_{b,\,s} \Loss_{b,s}\, x_{b,s} \\
+  \text{s.t.}\quad
+  &\sum_{s} x_{b,s} = 1 \;\;\forall\, b, \nonumber\\
+  &\sum_{b,\,s} \mathrm{bits}_s \cdot \abs{b} \cdot x_{b,s} \le B, \nonumber
+\end{align}
+where $B$ is the total bit budget and $\abs{b}$ is the parameter count of block $b$.
+\item \textbf{Quantization.} The chosen per-block strategies are applied using RTN, GPTQ \citep{frantar2023gptq}, or similar methods.
+\end{enumerate}
+
+Recent work extends this framework to MoE with hardware-aware ILP formulations \citep{duanmu2025mxmoe,li2024quantmoebench}. MxMoE \citep{duanmu2025mxmoe} adds a latency penalty and expert-aware GroupGEMM kernels. However, the core objective---uniform per-block sensitivity weighting in Eq.~\ref{eq:ilp}---remains unchanged.
+
+\subsection{The Routing--Sensitivity Gap}
+
+Equation~\ref{eq:ilp} treats every block identically: a rarely-activated expert with loss $\Loss$ contributes the same amount to the objective as a frequently-activated expert with the same $\Loss$. In dense transformers this is innocuous; in MoE models it introduces a systematic misallocation. Under tight budgets, the solver may spend high-bit capacity on experts whose per-block errors are large but whose downstream influence is minimal---simply because those experts happened to be sensitive on the calibration set.

@@ -1,0 +1,26 @@
+\section{Per-Task Downstream Breakdowns}
+\label{app:per-task}
+
+\begin{table*}[h]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\caption{Per-task accuracy at 2.5\,bits/param for all three models. \textbf{Bold}: RWS improvement.}
+\begin{tabular}{l cc cc cc}
+\toprule
+& \multicolumn{2}{c}{Qwen1.5-MoE} & \multicolumn{2}{c}{Mixtral-8x7B} & \multicolumn{2}{c}{DeepSeek-MoE} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
+Task & Base. & RWS & Base. & RWS & Base. & RWS \\
+\midrule
+PIQA            & 75.4 & \textbf{75.8} & 79.3 & \textbf{79.7} & 74.9 & \textbf{75.2} \\
+HellaSwag       & 69.5 & \textbf{70.1} & 80.4 & \textbf{80.9} & 70.2 & 69.9 \\
+ARC-Easy        & 58.1 & \textbf{59.3} & 75.8 & \textbf{76.2} & 63.7 & 63.4 \\
+ARC-Challenge   & 37.7 & 36.9          & 52.0 & \textbf{52.3} & 39.1 & 38.9 \\
+WinoGrande      & 63.4 & 63.0          & 71.9 & \textbf{72.3} & 63.2 & \textbf{63.9} \\
+LAMBADA-OpenAI  & 59.3 & \textbf{61.3} & 71.7 & \textbf{72.1} & 61.1 & \textbf{61.3} \\
+LAMBADA-Std     & 53.2 & \textbf{54.6} & 65.2 & \textbf{65.6} & 54.8 & \textbf{55.1} \\
+\midrule
+Average         & 59.5 & \textbf{60.2} & 70.9 & \textbf{71.3} & 61.0 & \textbf{61.1} \\
+\bottomrule
+\end{tabular}
+\end{table*}

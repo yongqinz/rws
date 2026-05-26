@@ -1,0 +1,14 @@
+# Calibration data cache (large pkl files)
+MxMoE/data/cache/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Logs
+MxMoE/log/
+
+# IDE
+.vscode/
+.idea/

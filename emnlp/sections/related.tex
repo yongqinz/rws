@@ -1,0 +1,17 @@
+\section{Related Work}
+\label{sec:related}
+
+\paragraph{MoE architectures.}
+Sparse MoE layers \citep{shazeer2017outrageously} enable massive parameter scaling with sub-linear compute growth. GShard \citep{lepikhin2021gshard} and Switch Transformers \citep{fedus2022switch} demonstrated scaling to billions of parameters. Recent models---Mixtral-8x7B \citep{jiang2024mixtral}, Qwen1.5-MoE \citep{bai2023qwen}, DeepSeek-V2/V3 \citep{deepseekai2024deepseekv2,deepseekai2024deepseekv3}, ST-MoE \citep{zoph2022stmoe}---use top-$k$ routing with shared and routed experts. Expert Choice routing \citep{zhou2022expertchoice} flips the assignment to let experts select tokens. Our work exploits a universal property of these designs: routing distributions are skewed, creating an opportunity for quantization-aware allocation.
+
+\paragraph{LLM quantization.}
+Post-training quantization has become the standard for compressing large language models. GPTQ \citep{frantar2023gptq} uses second-order Hessian information for layer-wise weight quantization. AWQ \citep{lin2024awq} identifies salient weight channels via activation magnitude. SmoothQuant \citep{xiao2023smoothquant} migrates quantization difficulty from activations to weights. LLM.int8() \citep{dettmers2022llmint8} and SpQR \citep{dettmers2024spqr} handle outlier features through mixed-precision decomposition. QLoRA \citep{dettmers2023qlora} couples quantization with parameter-efficient fine-tuning. Advanced codebook methods include QuIP/QuIP\# \citep{chee2024quip,tseng2024quipsharp}, AQLM \citep{egiazarian2024aqlm}, and OmniQuant \citep{shao2024omniquant}. These methods are orthogonal to the allocation problem we study; \method\ is composable with any per-block quantization algorithm.
+
+\paragraph{Mixed-precision allocation.}
+The HAWQ family \citep{dong2019hawq,yao2021hawqv3} uses sensitivity-based mixed-precision for CNNs and Transformers, with HAWQ-V3 introducing ILP-based allocation. MxMoE \citep{duanmu2025mxmoe} extends this to MoE with hardware-aware GroupGEMM kernels. QuantMoE-Bench \citep{li2024quantmoebench} benchmarks MoE quantization methods. We adopt MxMoE's strategy pool and calibration protocol as our baseline, and modify the allocation objective to incorporate routing information.
+
+\paragraph{MoE-specific compression.}
+QMoE \citep{frantar2023qmoe} applies sub-bit dictionary coding to MoE weights. EAC-MoE \citep{chen2025eacmoe} compresses expert activations. MoE-Pruning \citep{yang2024moei2} and Sparse Upcycling \citep{komatsuzaki2023sparseupcycling} reduce expert count. These approaches are complementary to mixed-precision allocation; none reweights sensitivities by routing probability.
+
+\paragraph{Routing analysis.}
+Prior work studies MoE routing for load balancing \citep{fedus2022switch}, capacity factor tuning, and expert specialization \citep{zhou2022expertchoice}. To our knowledge, we are the first to exploit routing skew in the \emph{objective} of a post-training quantization allocator and to propose a heterogeneity-based diagnostic for when such exploitation is beneficial.

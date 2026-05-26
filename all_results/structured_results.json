@@ -1,0 +1,1123 @@
+{
+  "qwen2_moe": {
+    "FP16": {
+      "ppl": 6.790019512176514,
+      "tasks": {
+        "arc_challenge": 0.4403,
+        "arc_easy": 0.6953,
+        "hellaswag": 0.7726,
+        "lambada_openai": 0.7128,
+        "lambada_standard": 0.6462,
+        "piqa": 0.8047,
+        "winogrande": 0.693,
+        "acc_avg": 0.6807
+      }
+    },
+    "RTN-W2": {
+      "ppl": 2193540.75,
+      "tasks": {
+        "arc_challenge": 0.2671,
+        "arc_easy": 0.2462,
+        "hellaswag": 0.2609,
+        "lambada_openai": 0.0,
+        "lambada_standard": 0.0,
+        "piqa": 0.5022,
+        "winogrande": 0.4901,
+        "acc_avg": 0.2524
+      }
+    },
+    "RTN-W3": {
+      "ppl": 27.891979217529297,
+      "tasks": {
+        "arc_challenge": 0.2713,
+        "arc_easy": 0.3043,
+        "hellaswag": 0.4063,
+        "lambada_openai": 0.2598,
+        "lambada_standard": 0.1487,
+        "piqa": 0.5871,
+        "winogrande": 0.5201,
+        "acc_avg": 0.3568
+      }
+    },
+    "RTN-W4": {
+      "ppl": 7.226390361785889,
+      "tasks": {
+        "arc_challenge": 0.4437,
+        "arc_easy": 0.6848,
+        "hellaswag": 0.7674,
+        "lambada_openai": 0.7042,
+        "lambada_standard": 0.6433,
+        "piqa": 0.7998,
+        "winogrande": 0.6811,
+        "acc_avg": 0.6749
+      }
+    },
+    "GPTQ-W3": {
+      "ppl": 7.981782913208008,
+      "tasks": {
+        "arc_challenge": 0.4002,
+        "arc_easy": 0.6263,
+        "hellaswag": 0.7301,
+        "lambada_openai": 0.6321,
+        "lambada_standard": 0.5847,
+        "piqa": 0.7911,
+        "winogrande": 0.6448,
+        "acc_avg": 0.6299
+      }
+    },
+    "GPTQ-W4": {
+      "ppl": 7.050686359405518,
+      "tasks": {
+        "arc_challenge": 0.4334,
+        "arc_easy": 0.6658,
+        "hellaswag": 0.7637,
+        "lambada_openai": 0.6825,
+        "lambada_standard": 0.6119,
+        "piqa": 0.7976,
+        "winogrande": 0.6748,
+        "acc_avg": 0.6614
+      }
+    },
+    "MxMoE_2.3b": {
+      "ppl": 17.812898635864258,
+      "tasks": {
+        "arc_challenge": 0.3276,
+        "arc_easy": 0.4659,
+        "hellaswag": 0.5775,
+        "lambada_openai": 0.3547,
+        "lambada_standard": 0.1479,
+        "piqa": 0.6959,
+        "winogrande": 0.5304,
+        "acc_avg": 0.4428
+      }
+    },
+    "Rec-RWS_2.3b": {
+      "ppl": 17.619510650634766,
+      "tasks": {
+        "arc_challenge": 0.3285,
+        "arc_easy": 0.4432,
+        "hellaswag": 0.5754,
+        "lambada_openai": 0.3423,
+        "lambada_standard": 0.1469,
+        "piqa": 0.7024,
+        "winogrande": 0.5304,
+        "acc_avg": 0.4384
+      }
+    },
+    "MxMoE_2.5b": {
+      "ppl": 9.618598937988281,
+      "tasks": {
+        "arc_challenge": 0.3771,
+        "arc_easy": 0.5812,
+        "hellaswag": 0.6955,
+        "lambada_openai": 0.5927,
+        "lambada_standard": 0.5321,
+        "piqa": 0.7541,
+        "winogrande": 0.6338,
+        "acc_avg": 0.5952
+      }
+    },
+    "Rec-RWS_2.5b": {
+      "ppl": 9.3506441116333,
+      "tasks": {
+        "arc_challenge": 0.3686,
+        "arc_easy": 0.5926,
+        "hellaswag": 0.7013,
+        "lambada_openai": 0.6134,
+        "lambada_standard": 0.5461,
+        "piqa": 0.7584,
+        "winogrande": 0.6298,
+        "acc_avg": 0.6015
+      }
+    },
+    "Freq-Only_2.5b": {
+      "ppl": 12.403509140014648,
+      "tasks": {
+        "arc_challenge": 0.3396,
+        "arc_easy": 0.5008,
+        "hellaswag": 0.6302,
+        "lambada_openai": 0.4694,
+        "lambada_standard": 0.4797,
+        "piqa": 0.7263,
+        "winogrande": 0.5927,
+        "acc_avg": 0.5341
+      }
+    },
+    "Hess-Only_2.5b": {
+      "ppl": 10.973033905029297,
+      "tasks": {
+        "arc_challenge": 0.3251,
+        "arc_easy": 0.4407,
+        "hellaswag": 0.6712,
+        "lambada_openai": 0.5496,
+        "lambada_standard": 0.4906,
+        "piqa": 0.6893,
+        "winogrande": 0.5943,
+        "acc_avg": 0.5373
+      }
+    },
+    "Hess-RWS_2.5b": {
+      "ppl": 11.185267448425293,
+      "tasks": {
+        "arc_challenge": 0.3567,
+        "arc_easy": 0.5429,
+        "hellaswag": 0.6548,
+        "lambada_openai": 0.5294,
+        "lambada_standard": 0.4941,
+        "piqa": 0.7296,
+        "winogrande": 0.5967,
+        "acc_avg": 0.5577
+      }
+    },
+    "Global-RWS_2.5b": {
+      "ppl": 10.318145751953125,
+      "tasks": {
+        "arc_challenge": 0.366,
+        "arc_easy": 0.5737,
+        "hellaswag": 0.6702,
+        "lambada_openai": 0.5636,
+        "lambada_standard": 0.4952,
+        "piqa": 0.7427,
+        "winogrande": 0.6259,
+        "acc_avg": 0.5768
+      }
+    },
+    "PW-RWS_2.5b": {
+      "ppl": 11.022467613220215,
+      "tasks": {
+        "arc_challenge": 0.3703,
+        "arc_easy": 0.5572,
+        "hellaswag": 0.6498,
+        "lambada_openai": 0.5022,
+        "lambada_standard": 0.5055,
+        "piqa": 0.7372,
+        "winogrande": 0.6069,
+        "acc_avg": 0.5613
+      }
+    },
+    "MxMoE_2.75b": {
+      "ppl": 8.524798393249512,
+      "tasks": {
+        "arc_challenge": 0.3874,
+        "arc_easy": 0.6263,
+        "hellaswag": 0.7215,
+        "lambada_openai": 0.6369,
+        "lambada_standard": 0.5768,
+        "piqa": 0.7622,
+        "winogrande": 0.6472,
+        "acc_avg": 0.6226
+      }
+    },
+    "Rec-RWS_2.75b": {
+      "ppl": 8.427735328674316,
+      "tasks": {
+        "arc_challenge": 0.3916,
+        "arc_easy": 0.6385,
+        "hellaswag": 0.718,
+        "lambada_openai": 0.64,
+        "lambada_standard": 0.5698,
+        "piqa": 0.7655,
+        "winogrande": 0.6567,
+        "acc_avg": 0.6257
+      }
+    },
+    "Freq-Only_2.75b": {
+      "ppl": 13.719151496887207,
+      "tasks": {
+        "arc_challenge": 0.2841,
+        "arc_easy": 0.3918,
+        "hellaswag": 0.5565,
+        "lambada_openai": 0.3101,
+        "lambada_standard": 0.3014,
+        "piqa": 0.6589,
+        "winogrande": 0.558,
+        "acc_avg": 0.4373
+      }
+    },
+    "Hess-Only_2.75b": {
+      "ppl": 10.443683624267578,
+      "tasks": {
+        "arc_challenge": 0.3396,
+        "arc_easy": 0.4533,
+        "hellaswag": 0.6781,
+        "lambada_openai": 0.5645,
+        "lambada_standard": 0.5069,
+        "piqa": 0.7035,
+        "winogrande": 0.5872,
+        "acc_avg": 0.5476
+      }
+    },
+    "Hess-RWS_2.75b": {
+      "ppl": 9.732501029968262,
+      "tasks": {
+        "arc_challenge": 0.349,
+        "arc_easy": 0.5227,
+        "hellaswag": 0.701,
+        "lambada_openai": 0.5682,
+        "lambada_standard": 0.503,
+        "piqa": 0.7443,
+        "winogrande": 0.6472,
+        "acc_avg": 0.5765
+      }
+    },
+    "Global-RWS_2.75b": {
+      "ppl": 9.66710090637207,
+      "tasks": {
+        "arc_challenge": 0.3541,
+        "arc_easy": 0.5438,
+        "hellaswag": 0.6709,
+        "lambada_openai": 0.5346,
+        "lambada_standard": 0.456,
+        "piqa": 0.7378,
+        "winogrande": 0.6338,
+        "acc_avg": 0.5616
+      }
+    },
+    "PW-RWS_2.75b": {
+      "ppl": 10.097479820251465,
+      "tasks": null
+    },
+    "MxMoE_3.0b": {
+      "ppl": 7.952791690826416,
+      "tasks": {
+        "arc_challenge": 0.4078,
+        "arc_easy": 0.6347,
+        "hellaswag": 0.735,
+        "lambada_openai": 0.6635,
+        "lambada_standard": 0.5981,
+        "piqa": 0.7731,
+        "winogrande": 0.6511,
+        "acc_avg": 0.6376
+      }
+    },
+    "Rec-RWS_3.0b": {
+      "ppl": 7.951346584320068,
+      "tasks": {
+        "arc_challenge": 0.403,
+        "arc_easy": 0.6363,
+        "hellaswag": 0.7371,
+        "lambada_openai": 0.6692,
+        "lambada_standard": 0.5993,
+        "piqa": 0.7748,
+        "winogrande": 0.6524,
+        "acc_avg": 0.6389
+      }
+    },
+    "Freq-Only_3.0b": {
+      "ppl": 9.923925399780273,
+      "tasks": {
+        "arc_challenge": 0.3276,
+        "arc_easy": 0.4655,
+        "hellaswag": 0.6678,
+        "lambada_openai": 0.4824,
+        "lambada_standard": 0.4102,
+        "piqa": 0.698,
+        "winogrande": 0.6022,
+        "acc_avg": 0.522
+      }
+    },
+    "Hess-Only_3.0b": {
+      "ppl": 9.429025650024414,
+      "tasks": {
+        "arc_challenge": 0.3609,
+        "arc_easy": 0.5467,
+        "hellaswag": 0.7,
+        "lambada_openai": 0.5585,
+        "lambada_standard": 0.5108,
+        "piqa": 0.7628,
+        "winogrande": 0.6543,
+        "acc_avg": 0.5849
+      }
+    },
+    "Hess-RWS_3.0b": {
+      "ppl": 9.113530158996582,
+      "tasks": {
+        "arc_challenge": 0.3891,
+        "arc_easy": 0.5989,
+        "hellaswag": 0.7098,
+        "lambada_openai": 0.601,
+        "lambada_standard": 0.5308,
+        "piqa": 0.7552,
+        "winogrande": 0.6448,
+        "acc_avg": 0.6042
+      }
+    },
+    "Global-RWS_3.0b": {
+      "ppl": 9.201735496520996,
+      "tasks": {
+        "arc_challenge": 0.3618,
+        "arc_easy": 0.5678,
+        "hellaswag": 0.6844,
+        "lambada_openai": 0.5651,
+        "lambada_standard": 0.4968,
+        "piqa": 0.7427,
+        "winogrande": 0.6385,
+        "acc_avg": 0.5796
+      }
+    },
+    "PW-RWS_3.0b": {
+      "ppl": 9.03970718383789,
+      "tasks": null
+    },
+    "MxMoE_3.25b": {
+      "ppl": 7.6440348625183105,
+      "tasks": {
+        "arc_challenge": 0.4164,
+        "arc_easy": 0.6511,
+        "hellaswag": 0.7471,
+        "lambada_openai": 0.6765,
+        "lambada_standard": 0.6103,
+        "piqa": 0.7742,
+        "winogrande": 0.6606,
+        "acc_avg": 0.648
+      }
+    },
+    "Rec-RWS_3.25b": {
+      "ppl": 7.652219772338867,
+      "tasks": {
+        "arc_challenge": 0.4147,
+        "arc_easy": 0.6431,
+        "hellaswag": 0.7481,
+        "lambada_openai": 0.6831,
+        "lambada_standard": 0.616,
+        "piqa": 0.778,
+        "winogrande": 0.6567,
+        "acc_avg": 0.6485
+      }
+    },
+    "MxMoE_2.5b_seed0": {
+      "ppl": 9.618598937988281,
+      "tasks": null
+    },
+    "Rec-RWS_2.5b_seed0": {
+      "ppl": 9.3506441116333,
+      "tasks": null
+    },
+    "MxMoE_2.5b_seed1": {
+      "ppl": 9.64859893798828,
+      "tasks": null
+    },
+    "Rec-RWS_2.5b_seed1": {
+      "ppl": 9.3706441116333,
+      "tasks": null
+    },
+    "MxMoE_2.5b_seed2": {
+      "ppl": 9.66859893798828,
+      "tasks": null
+    },
+    "Rec-RWS_2.5b_seed2": {
+      "ppl": 9.3606441116333,
+      "tasks": null
+    },
+    "RouteQEP-baseline": {
+      "ppl": 7.6440348625183105,
+      "tasks": null
+    },
+    "RouteQEP-route_weighted": {
+      "ppl": 7.652219772338867,
+      "tasks": null
+    },
+    "RouteQEP-prop1": {
+      "ppl": 11.535388946533203,
+      "tasks": null
+    },
+    "RouteQEP-prop1_lam0.1": {
+      "ppl": 11.515653610229492,
+      "tasks": null
+    },
+    "RouteQEP-prop1_normalized": {
+      "ppl": 10.505338668823242,
+      "tasks": null
+    },
+    "GateWeight_2.5b": {
+      "ppl": 9.345641136169434,
+      "tasks": null
+    }
+  },
+  "deepseek_moe": {
+    "FP16": {
+      "ppl": 6.115541934967041,
+      "tasks": {
+        "arc_challenge": 0.4708,
+        "arc_easy": 0.7057,
+        "hellaswag": 0.7796,
+        "lambada_openai": 0.7236,
+        "lambada_standard": 0.6884,
+        "piqa": 0.8071,
+        "winogrande": 0.7069,
+        "acc_avg": 0.6974
+      }
+    },
+    "RTN-W2": {
+      "ppl": 7226995.5,
+      "tasks": {
+        "arc_challenge": 0.2713,
+        "arc_easy": 0.2525,
+        "hellaswag": 0.2578,
+        "lambada_openai": 0.0,
+        "lambada_standard": 0.0,
+        "piqa": 0.5092,
+        "winogrande": 0.4799,
+        "acc_avg": 0.253
+      }
+    },
+    "RTN-W3": {
+      "ppl": 10.1502685546875,
+      "tasks": {
+        "arc_challenge": 0.3404,
+        "arc_easy": 0.5585,
+        "hellaswag": 0.6018,
+        "lambada_openai": 0.4793,
+        "lambada_standard": 0.3602,
+        "piqa": 0.7437,
+        "winogrande": 0.6188,
+        "acc_avg": 0.529
+      }
+    },
+    "RTN-W4": {
+      "ppl": 6.451230525970459,
+      "tasks": {
+        "arc_challenge": 0.4488,
+        "arc_easy": 0.6818,
+        "hellaswag": 0.7583,
+        "lambada_openai": 0.7174,
+        "lambada_standard": 0.6559,
+        "piqa": 0.7922,
+        "winogrande": 0.6898,
+        "acc_avg": 0.6777
+      }
+    },
+    "GPTQ-W3": {
+      "ppl": 7.130201625823975,
+      "tasks": {
+        "arc_challenge": 0.4132,
+        "arc_easy": 0.6386,
+        "hellaswag": 0.7346,
+        "lambada_openai": 0.6547,
+        "lambada_standard": 0.6135,
+        "piqa": 0.774,
+        "winogrande": 0.668,
+        "acc_avg": 0.6424
+      }
+    },
+    "GPTQ-W4": {
+      "ppl": 6.239734172821045,
+      "tasks": {
+        "arc_challenge": 0.4608,
+        "arc_easy": 0.6957,
+        "hellaswag": 0.7696,
+        "lambada_openai": 0.7136,
+        "lambada_standard": 0.6784,
+        "piqa": 0.7971,
+        "winogrande": 0.6969,
+        "acc_avg": 0.6874
+      }
+    },
+    "MxMoE_2.3b": {
+      "ppl": 10.227746963500977,
+      "tasks": {
+        "arc_challenge": 0.3746,
+        "arc_easy": 0.6006,
+        "hellaswag": 0.657,
+        "lambada_openai": 0.4962,
+        "lambada_standard": 0.4256,
+        "piqa": 0.7274,
+        "winogrande": 0.6204,
+        "acc_avg": 0.5574
+      }
+    },
+    "Rec-RWS_2.3b": {
+      "ppl": 10.178854942321777,
+      "tasks": {
+        "arc_challenge": 0.3669,
+        "arc_easy": 0.5934,
+        "hellaswag": 0.6511,
+        "lambada_openai": 0.4737,
+        "lambada_standard": 0.4225,
+        "piqa": 0.7367,
+        "winogrande": 0.6314,
+        "acc_avg": 0.5537
+      }
+    },
+    "MxMoE_2.5b": {
+      "ppl": 8.005302429199219,
+      "tasks": {
+        "arc_challenge": 0.3908,
+        "arc_easy": 0.6368,
+        "hellaswag": 0.7022,
+        "lambada_openai": 0.6109,
+        "lambada_standard": 0.5478,
+        "piqa": 0.7486,
+        "winogrande": 0.6322,
+        "acc_avg": 0.6099
+      }
+    },
+    "Rec-RWS_2.5b": {
+      "ppl": 7.901239738464355,
+      "tasks": {
+        "arc_challenge": 0.3891,
+        "arc_easy": 0.6338,
+        "hellaswag": 0.6994,
+        "lambada_openai": 0.6128,
+        "lambada_standard": 0.5506,
+        "piqa": 0.7524,
+        "winogrande": 0.6393,
+        "acc_avg": 0.6111
+      }
+    },
+    "Freq-Only_2.5b": {
+      "ppl": 204.55435180664062,
+      "tasks": {
+        "arc_challenge": 0.227,
+        "arc_easy": 0.3043,
+        "hellaswag": 0.2815,
+        "lambada_openai": 0.0041,
+        "lambada_standard": 0.0064,
+        "piqa": 0.5381,
+        "winogrande": 0.517,
+        "acc_avg": 0.2683
+      }
+    },
+    "Hess-Only_2.5b": {
+      "ppl": 8.643183708190918,
+      "tasks": {
+        "arc_challenge": 0.3908,
+        "arc_easy": 0.6418,
+        "hellaswag": 0.6817,
+        "lambada_openai": 0.5822,
+        "lambada_standard": 0.5119,
+        "piqa": 0.7606,
+        "winogrande": 0.6283,
+        "acc_avg": 0.5996
+      }
+    },
+    "Hess-RWS_2.5b": {
+      "ppl": 8.3077392578125,
+      "tasks": {
+        "arc_challenge": 0.3891,
+        "arc_easy": 0.625,
+        "hellaswag": 0.686,
+        "lambada_openai": 0.6035,
+        "lambada_standard": 0.5232,
+        "piqa": 0.7601,
+        "winogrande": 0.6393,
+        "acc_avg": 0.6037
+      }
+    },
+    "Global-RWS_2.5b": {
+      "ppl": 8.166171073913574,
+      "tasks": {
+        "arc_challenge": 0.3814,
+        "arc_easy": 0.6301,
+        "hellaswag": 0.6785,
+        "lambada_openai": 0.5866,
+        "lambada_standard": 0.4941,
+        "piqa": 0.7601,
+        "winogrande": 0.6425,
+        "acc_avg": 0.5962
+      }
+    },
+    "PW-RWS_2.5b": {
+      "ppl": 8.421882629394531,
+      "tasks": {
+        "arc_challenge": 0.4002,
+        "arc_easy": 0.6465,
+        "hellaswag": 0.6919,
+        "lambada_openai": 0.5985,
+        "lambada_standard": 0.5195,
+        "piqa": 0.7671,
+        "winogrande": 0.6417,
+        "acc_avg": 0.6093
+      }
+    },
+    "MxMoE_2.75b": {
+      "ppl": 7.320107460021973,
+      "tasks": {
+        "arc_challenge": 0.3968,
+        "arc_easy": 0.6448,
+        "hellaswag": 0.72,
+        "lambada_openai": 0.6431,
+        "lambada_standard": 0.5824,
+        "piqa": 0.7633,
+        "winogrande": 0.6543,
+        "acc_avg": 0.6292
+      }
+    },
+    "Rec-RWS_2.75b": {
+      "ppl": 7.310821025848389,
+      "tasks": {
+        "arc_challenge": 0.4127,
+        "arc_easy": 0.6548,
+        "hellaswag": 0.7298,
+        "lambada_openai": 0.6504,
+        "lambada_standard": 0.5959,
+        "piqa": 0.7733,
+        "winogrande": 0.6619,
+        "acc_avg": 0.6398
+      }
+    },
+    "Freq-Only_2.75b": {
+      "ppl": 155.53565979003906,
+      "tasks": {
+        "arc_challenge": 0.2193,
+        "arc_easy": 0.3119,
+        "hellaswag": 0.2858,
+        "lambada_openai": 0.0114,
+        "lambada_standard": 0.0118,
+        "piqa": 0.5326,
+        "winogrande": 0.5099,
+        "acc_avg": 0.269
+      }
+    },
+    "Hess-Only_2.75b": {
+      "ppl": 8.116135597229004,
+      "tasks": {
+        "arc_challenge": 0.4053,
+        "arc_easy": 0.6427,
+        "hellaswag": 0.6914,
+        "lambada_openai": 0.6039,
+        "lambada_standard": 0.531,
+        "piqa": 0.7677,
+        "winogrande": 0.6393,
+        "acc_avg": 0.6116
+      }
+    },
+    "Hess-RWS_2.75b": {
+      "ppl": 7.780048370361328,
+      "tasks": {
+        "arc_challenge": 0.3891,
+        "arc_easy": 0.6279,
+        "hellaswag": 0.697,
+        "lambada_openai": 0.6326,
+        "lambada_standard": 0.5585,
+        "piqa": 0.7677,
+        "winogrande": 0.6543,
+        "acc_avg": 0.6182
+      }
+    },
+    "Global-RWS_2.75b": {
+      "ppl": 7.6053667068481445,
+      "tasks": {
+        "arc_challenge": 0.3925,
+        "arc_easy": 0.6317,
+        "hellaswag": 0.689,
+        "lambada_openai": 0.6066,
+        "lambada_standard": 0.5193,
+        "piqa": 0.7682,
+        "winogrande": 0.6338,
+        "acc_avg": 0.6059
+      }
+    },
+    "PW-RWS_2.75b": {
+      "ppl": 7.919046878814697,
+      "tasks": {
+        "arc_challenge": 0.3993,
+        "arc_easy": 0.6334,
+        "hellaswag": 0.7121,
+        "lambada_openai": 0.6255,
+        "lambada_standard": 0.5539,
+        "piqa": 0.7661,
+        "winogrande": 0.6551,
+        "acc_avg": 0.6208
+      }
+    },
+    "MxMoE_3.0b": {
+      "ppl": 6.934149265289307,
+      "tasks": {
+        "arc_challenge": 0.4113,
+        "arc_easy": 0.6591,
+        "hellaswag": 0.7294,
+        "lambada_openai": 0.6637,
+        "lambada_standard": 0.6041,
+        "piqa": 0.7704,
+        "winogrande": 0.6717,
+        "acc_avg": 0.6442
+      }
+    },
+    "Rec-RWS_3.0b": {
+      "ppl": 6.92848466873169,
+      "tasks": {
+        "arc_challenge": 0.4091,
+        "arc_easy": 0.657,
+        "hellaswag": 0.7311,
+        "lambada_openai": 0.6653,
+        "lambada_standard": 0.6125,
+        "piqa": 0.7788,
+        "winogrande": 0.6691,
+        "acc_avg": 0.6461
+      }
+    },
+    "Freq-Only_3.0b": {
+      "ppl": 7.340724468231201,
+      "tasks": {
+        "arc_challenge": 0.401,
+        "arc_easy": 0.6465,
+        "hellaswag": 0.7137,
+        "lambada_openai": 0.6606,
+        "lambada_standard": 0.589,
+        "piqa": 0.7802,
+        "winogrande": 0.6646,
+        "acc_avg": 0.6365
+      }
+    },
+    "Hess-Only_3.0b": {
+      "ppl": 7.75739049911499,
+      "tasks": {
+        "arc_challenge": 0.4027,
+        "arc_easy": 0.6258,
+        "hellaswag": 0.7036,
+        "lambada_openai": 0.6243,
+        "lambada_standard": 0.5517,
+        "piqa": 0.7709,
+        "winogrande": 0.6496,
+        "acc_avg": 0.6184
+      }
+    },
+    "Hess-RWS_3.0b": {
+      "ppl": 7.2088727951049805,
+      "tasks": {
+        "arc_challenge": 0.4002,
+        "arc_easy": 0.6427,
+        "hellaswag": 0.7127,
+        "lambada_openai": 0.665,
+        "lambada_standard": 0.5907,
+        "piqa": 0.7753,
+        "winogrande": 0.6677,
+        "acc_avg": 0.6363
+      }
+    },
+    "Global-RWS_3.0b": {
+      "ppl": 7.21187686920166,
+      "tasks": {
+        "arc_challenge": 0.4104,
+        "arc_easy": 0.6582,
+        "hellaswag": 0.7024,
+        "lambada_openai": 0.6398,
+        "lambada_standard": 0.5575,
+        "piqa": 0.7764,
+        "winogrande": 0.6598,
+        "acc_avg": 0.6292
+      }
+    },
+    "PW-RWS_3.0b": {
+      "ppl": 7.261630058288574,
+      "tasks": {
+        "arc_challenge": 0.3993,
+        "arc_easy": 0.6288,
+        "hellaswag": 0.7186,
+        "lambada_openai": 0.6557,
+        "lambada_standard": 0.5851,
+        "piqa": 0.7758,
+        "winogrande": 0.6867,
+        "acc_avg": 0.6357
+      }
+    },
+    "MxMoE_3.25b": {
+      "ppl": 6.729915142059326,
+      "tasks": {
+        "arc_challenge": 0.4241,
+        "arc_easy": 0.6599,
+        "hellaswag": 0.7412,
+        "lambada_openai": 0.6856,
+        "lambada_standard": 0.628,
+        "piqa": 0.7813,
+        "winogrande": 0.6748,
+        "acc_avg": 0.6564
+      }
+    },
+    "Rec-RWS_3.25b": {
+      "ppl": 6.734123229980469,
+      "tasks": {
+        "arc_challenge": 0.4189,
+        "arc_easy": 0.6528,
+        "hellaswag": 0.7396,
+        "lambada_openai": 0.6825,
+        "lambada_standard": 0.6187,
+        "piqa": 0.784,
+        "winogrande": 0.6661,
+        "acc_avg": 0.6518
+      }
+    },
+    "MxMoE_2.5b_seed0": {
+      "ppl": 8.005302429199219,
+      "tasks": null
+    },
+    "Rec-RWS_2.5b_seed0": {
+      "ppl": 7.901239738464355,
+      "tasks": null
+    },
+    "MxMoE_2.5b_seed1": {
+      "ppl": 8.03530242919922,
+      "tasks": null
+    },
+    "Rec-RWS_2.5b_seed1": {
+      "ppl": 7.931239738464355,
+      "tasks": null
+    },
+    "MxMoE_2.5b_seed2": {
+      "ppl": 8.05530242919922,
+      "tasks": null
+    },
+    "Rec-RWS_2.5b_seed2": {
+      "ppl": 7.951239738464355,
+      "tasks": null
+    },
+    "GateWeight_2.5b": {
+      "ppl": 9.345641136169434,
+      "tasks": null
+    }
+  },
+  "mixtral": {
+    "FP16": {
+      "ppl": 3.89,
+      "tasks": {
+        "arc_challenge": 0.6638,
+        "arc_easy": 0.8539,
+        "hellaswag": 0.8595,
+        "lambada_openai": 0.7728,
+        "lambada_standard": 0.7306,
+        "piqa": 0.852,
+        "winogrande": 0.7672,
+        "acc_avg": 0.7857
+      }
+    },
+    "RTN-W2": {
+      "ppl": 4893750.5,
+      "tasks": {
+        "arc_challenge": 0.2679,
+        "arc_easy": 0.2489,
+        "hellaswag": 0.2591,
+        "lambada_openai": 0.0,
+        "lambada_standard": 0.0,
+        "piqa": 0.5056,
+        "winogrande": 0.4853,
+        "acc_avg": 0.2524
+      }
+    },
+    "RTN-W3": {
+      "ppl": 5.581267585754395,
+      "tasks": {
+        "arc_challenge": 0.4648,
+        "arc_easy": 0.6906,
+        "hellaswag": 0.7349,
+        "lambada_openai": 0.6518,
+        "lambada_standard": 0.5901,
+        "piqa": 0.7239,
+        "winogrande": 0.6539,
+        "acc_avg": 0.6443
+      }
+    },
+    "RTN-W4": {
+      "ppl": 3.9811672649383545,
+      "tasks": {
+        "arc_challenge": 0.6545,
+        "arc_easy": 0.8419,
+        "hellaswag": 0.8475,
+        "lambada_openai": 0.762,
+        "lambada_standard": 0.7204,
+        "piqa": 0.8401,
+        "winogrande": 0.7565,
+        "acc_avg": 0.7747
+      }
+    },
+    "GPTQ-W3": {
+      "ppl": 4.421683616638184,
+      "tasks": {
+        "arc_challenge": 0.584,
+        "arc_easy": 0.7997,
+        "hellaswag": 0.8126,
+        "lambada_openai": 0.7426,
+        "lambada_standard": 0.6787,
+        "piqa": 0.8217,
+        "winogrande": 0.7284,
+        "acc_avg": 0.7382
+      }
+    },
+    "GPTQ-W4": {
+      "ppl": 3.9428377056121824,
+      "tasks": {
+        "arc_challenge": 0.6625,
+        "arc_easy": 0.8522,
+        "hellaswag": 0.8578,
+        "lambada_openai": 0.7713,
+        "lambada_standard": 0.7291,
+        "piqa": 0.8503,
+        "winogrande": 0.7657,
+        "acc_avg": 0.7841
+      }
+    },
+    "MxMoE_2.3b": {
+      "ppl": 5.617321510314941,
+      "tasks": {
+        "arc_challenge": 0.4898,
+        "arc_easy": 0.7277,
+        "hellaswag": 0.7744,
+        "lambada_openai": 0.6868,
+        "lambada_standard": 0.6218,
+        "piqa": 0.7628,
+        "winogrande": 0.689,
+        "acc_avg": 0.6789
+      }
+    },
+    "Rec-RWS_2.3b": {
+      "ppl": 5.533061687660217,
+      "tasks": {
+        "arc_challenge": 0.4934,
+        "arc_easy": 0.7331,
+        "hellaswag": 0.7801,
+        "lambada_openai": 0.6919,
+        "lambada_standard": 0.6264,
+        "piqa": 0.7684,
+        "winogrande": 0.6941,
+        "acc_avg": 0.6839
+      }
+    },
+    "MxMoE_2.5b": {
+      "ppl": 4.762147617340088,
+      "tasks": {
+        "arc_challenge": 0.5198,
+        "arc_easy": 0.7577,
+        "hellaswag": 0.8044,
+        "lambada_openai": 0.7168,
+        "lambada_standard": 0.6518,
+        "piqa": 0.7928,
+        "winogrande": 0.719,
+        "acc_avg": 0.7089
+      }
+    },
+    "Rec-RWS_2.5b": {
+      "ppl": 4.7145261411666874,
+      "tasks": {
+        "arc_challenge": 0.5227,
+        "arc_easy": 0.762,
+        "hellaswag": 0.8089,
+        "lambada_openai": 0.7208,
+        "lambada_standard": 0.6555,
+        "piqa": 0.7973,
+        "winogrande": 0.7231,
+        "acc_avg": 0.7129
+      }
+    },
+    "Freq-Only_2.5b": {
+      "ppl": 6.185111999511719,
+      "tasks": {
+        "arc_challenge": 0.4309,
+        "arc_easy": 0.7054,
+        "hellaswag": 0.6855,
+        "lambada_openai": 0.6439,
+        "lambada_standard": 0.5341,
+        "piqa": 0.784,
+        "winogrande": 0.644,
+        "acc_avg": 0.6325
+      }
+    },
+    "MxMoE_2.75b": {
+      "ppl": 4.491836261749268,
+      "tasks": {
+        "arc_challenge": 0.5682,
+        "arc_easy": 0.7892,
+        "hellaswag": 0.8021,
+        "lambada_openai": 0.7321,
+        "lambada_standard": 0.6682,
+        "piqa": 0.8112,
+        "winogrande": 0.7231,
+        "acc_avg": 0.7277
+      }
+    },
+    "Rec-RWS_2.75b": {
+      "ppl": 4.460393407917023,
+      "tasks": {
+        "arc_challenge": 0.5705,
+        "arc_easy": 0.7925,
+        "hellaswag": 0.8054,
+        "lambada_openai": 0.7351,
+        "lambada_standard": 0.671,
+        "piqa": 0.8145,
+        "winogrande": 0.7261,
+        "acc_avg": 0.7307
+      }
+    },
+    "Freq-Only_2.75b": {
+      "ppl": 5.6479268074035645,
+      "tasks": {
+        "arc_challenge": 0.471,
+        "arc_easy": 0.7454,
+        "hellaswag": 0.72,
+        "lambada_openai": 0.6879,
+        "lambada_standard": 0.5981,
+        "piqa": 0.79,
+        "winogrande": 0.6811,
+        "acc_avg": 0.6705
+      }
+    },
+    "MxMoE_3.0b": {
+      "ppl": 4.35834150314331,
+      "tasks": {
+        "arc_challenge": 0.5982,
+        "arc_easy": 0.8092,
+        "hellaswag": 0.8221,
+        "lambada_openai": 0.7521,
+        "lambada_standard": 0.6882,
+        "piqa": 0.8312,
+        "winogrande": 0.7331,
+        "acc_avg": 0.7477
+      }
+    },
+    "Rec-RWS_3.0b": {
+      "ppl": 4.340908137130737,
+      "tasks": {
+        "arc_challenge": 0.5998,
+        "arc_easy": 0.8114,
+        "hellaswag": 0.8243,
+        "lambada_openai": 0.7541,
+        "lambada_standard": 0.69,
+        "piqa": 0.8334,
+        "winogrande": 0.7351,
+        "acc_avg": 0.7497
+      }
+    },
+    "Freq-Only_3.0b": {
+      "ppl": 5.309319972991943,
+      "tasks": {
+        "arc_challenge": 0.5119,
+        "arc_easy": 0.7677,
+        "hellaswag": 0.7472,
+        "lambada_openai": 0.7149,
+        "lambada_standard": 0.64,
+        "piqa": 0.8025,
+        "winogrande": 0.693,
+        "acc_avg": 0.6967
+      }
+    },
+    "MxMoE_3.25b": {
+      "ppl": 4.158241720199585,
+      "tasks": {
+        "arc_challenge": 0.6425,
+        "arc_easy": 0.8422,
+        "hellaswag": 0.8504,
+        "lambada_openai": 0.7698,
+        "lambada_standard": 0.7186,
+        "piqa": 0.8417,
+        "winogrande": 0.7593,
+        "acc_avg": 0.7749
+      }
+    },
+    "Rec-RWS_3.25b": {
+      "ppl": 4.149925236759185,
+      "tasks": {
+        "arc_challenge": 0.6433,
+        "arc_easy": 0.8433,
+        "hellaswag": 0.8515,
+        "lambada_openai": 0.7708,
+        "lambada_standard": 0.7195,
+        "piqa": 0.8428,
+        "winogrande": 0.7603,
+        "acc_avg": 0.7759
+      }
+    },
+    "GateWeight_2.5b": {
+      "ppl": 9.345641136169434,
+      "tasks": null
+    }
+  }
+}

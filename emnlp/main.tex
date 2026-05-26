@@ -1,0 +1,56 @@
+\documentclass[11pt]{article}
+\usepackage{acl}
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{inconsolata}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{subcaption}
+\usepackage{xspace}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{placeins}
+
+% Math commands
+\newcommand{\method}{\textsc{RWS}\xspace}
+\newcommand{\longmethod}{Route-Weighted Sensitivity\xspace}
+\newcommand{\rhi}{\mathrm{RHI}}
+\newcommand{\piprob}{\pi}
+\newcommand{\Loss}{\mathcal{L}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\newcommand{\abs}[1]{\lvert #1 \rvert}
+
+\title{Route-Weighted Sensitivity for Mixed-Precision \\ MoE Quantization}
+
+\author{Anonymous}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\input{sections/abstract}
+\end{abstract}
+
+\input{sections/intro}
+\input{sections/background}
+\input{sections/method}
+\input{sections/experiments}
+\input{sections/results}
+\input{sections/related}
+\input{sections/conclusion}
+
+\bibliographystyle{acl_natbib}
+\bibliography{references}
+
+\appendix
+\input{sections/appendix_allocation}
+\input{sections/appendix_downstream}
+\input{sections/appendix_routeqep}
+
+\end{document}
