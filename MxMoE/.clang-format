@@ -1,0 +1,17 @@
+BasedOnStyle: Google
+ColumnLimit: 120
+
+DerivePointerAlignment: false
+PointerAlignment: Left
+
+AlignConsecutiveAssignments: Consecutive
+# Only merge empty blocks.
+AllowShortBlocksOnASingleLine: Empty
+
+# Never put short ifs on the same line
+# AllowShortIfStatementsOnASingleLine: Never
+
+AllowShortLoopsOnASingleLine: false
+# Default for clang-8, changed in later clangs. Set explicitly for forwards
+# compatibility for students with modern clangs
+# IncludeBlocks: Regroup

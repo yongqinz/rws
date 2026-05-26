@@ -1,0 +1,34 @@
+# derived from https://github.com/NVIDIA/cub/blob/main/.clangd
+
+CompileFlags:
+  Compiler: clang++
+  Remove:
+    - -forward-unknown-to-host-compiler
+    - --generate-code*
+    # strip CUDA flags unknown to clang
+    - "-ccbin*"
+    - "--compiler-options*"
+    - "--expt-extended-lambda"
+    - "--expt-relaxed-constexpr"
+    - "-forward-unknown-to-host-compiler"
+    - "-Werror=cross-execution-space-call"
+    - "-Xcompiler=-fPIE"
+    - "-Xcompiler=-fPIC"
+    - "-Xcompiler=-Wconversion"
+    - "-Xcompiler=-fno-strict-aliasing"
+    - "-Xcompiler=-fvisibility=hidden"
+    - "-Xptxas=-v"
+    - "--generate-line-info"
+    - "--options-file"
+    - "--diag_suppress=cc_clobber_ignored,--diag_suppress=field_without_dll_interface,--diag_suppress=base_class_has_different_dll_interface,--diag_suppress=dll_interface_conflict_none_assumed,--diag_suppress=dll_interface_conflict_dllexport_assumed,--diag_suppress=bad_friend_decl"
+    - "--diag_suppress=cc_clobber_ignored,--diag_suppress=integer_sign_change,--diag_suppress=useless_using_declaration,--diag_suppress=set_but_not_used,--diag_suppress=field_without_dll_interface,--diag_suppress=base_class_has_different_dll_interface,--diag_suppress=dll_interface_conflict_none_assumed,--diag_suppress=dll_interface_conflict_dllexport_assumed,--diag_suppress=implicit_return_from_non_void_function,--diag_suppress=unsigned_compare_with_zero,--diag_suppress=declared_but_not_referenced,--diag_suppress=bad_friend_decl"
+    - "-gencode"
+    - "-Xcudafe"
+    - "--use_fast_math"
+
+  Add:
+    # Allow variadic CUDA functions
+    - "-Xclang=-fcuda-allow-variadic-functions"
+    - "--no-cuda-version-check"
+    # - "-I/home/duanmuhaojie/install/gcc-12/include/c++/12.3.1/"
+

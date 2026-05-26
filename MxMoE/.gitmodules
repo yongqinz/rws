@@ -1,0 +1,15 @@
+[submodule "mxmoe/3rdparty/fast-hadamard-transform"]
+	path = mxmoe/3rdparty/fast-hadamard-transform
+	url = https://github.com/Dao-AILab/fast-hadamard-transform.git
+[submodule "mxmoe/kernels/src/3rdparty/fmt"]
+	path = mxmoe/kernels/src/3rdparty/fmt
+	url = https://github.com/fmtlib/fmt.git
+[submodule "mxmoe/kernels/src/3rdparty/pybind11"]
+	path = mxmoe/kernels/src/3rdparty/pybind11
+	url = https://github.com/pybind/pybind11.git
+[submodule "mxmoe/kernels/src/3rdparty/cccl"]
+	path = mxmoe/kernels/src/3rdparty/cccl
+	url = https://github.com/NVIDIA/cccl.git
+[submodule "mxmoe/kernels/src/3rdparty/cutlass"]
+	path = mxmoe/kernels/src/3rdparty/cutlass
+	url = https://github.com/NVIDIA/cutlass.git

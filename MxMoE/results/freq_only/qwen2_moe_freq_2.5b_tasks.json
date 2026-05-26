@@ -1,0 +1,1 @@
+{"zero_shot": {"arc_challenge": 0.3396, "arc_easy": 0.5008, "hellaswag": 0.6302, "lambada_openai": 0.4694, "lambada_standard": 0.4797, "piqa": 0.7263, "winogrande": 0.5927, "acc_avg": 0.5341}}
